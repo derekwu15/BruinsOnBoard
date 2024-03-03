@@ -18,7 +18,7 @@ connection.once('open', () => {
 })
 
 app.get('/', (req, res) => {
-  res.json({mssg: 'welcome'})
+  res.json({msg: 'welcome'})
 })
 
 const usersRouter = require('./routes/users');
