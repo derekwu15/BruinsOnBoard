@@ -1,4 +1,4 @@
-// Filename - pages/profile/ridesCreate.js
+// Filename - pages/rides/ridesCreate.js
 
 import React from "react";
 
