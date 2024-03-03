@@ -1,11 +1,12 @@
 // Filename - pages/profile/signup.js
 
 import React from "react";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
   return (
     <div>
-      <h1>Sign Up</h1>
+      <h1>Sign In</h1>
       <form>
         <label>
           Email:{' '}
@@ -19,6 +20,11 @@ const SignUp = () => {
         <br />
         <input type="submit" value="Submit" />
       </form>
+
+      <p>
+        Don't have an account? <Link to="/signup">Sign Up</Link>
+      </p>
+
     </div>
   );
 };
