@@ -3,9 +3,9 @@
 import React from "react";
 import Navbar from "./components/Navbar/navbar";
 import {
-	BrowserRouter as Router,
-	Routes,
-	Route,
+  BrowserRouter as Router,
+  Routes,
+  Route,
 } from "react-router-dom";
 import Home from "./pages/home/home";
 import Login from "./pages/profile/login";
@@ -14,18 +14,18 @@ import Rides from "./pages/rides/rides";
 import Messages from "./pages/messages/message";
 
 function App() {
-	return (
-		<Router>
-			<Navbar />
-			<Routes>
-				<Route exact path="/" element={<Home />} />
-				<Route path="/rides" element={<Rides />} />
-				<Route path="/login" element={<Login />} />
-              	<Route path="/signup" element={<SignUp />} />
-				  <Route path="/message" element={<Messages />} />
-			</Routes>
-		</Router>
-	);
+  return (
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route exact path="/" element={<Home />} />
+        <Route path="/rides" element={<Rides />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/message" element={<Messages />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
