@@ -11,6 +11,7 @@ import Home from "./pages/home/home";
 import Login from "./pages/profile/login";
 import SignUp from "./pages/profile/signup";
 import Rides from "./pages/rides/rides";
+import Messages from "./pages/messages/message";
 
 function App() {
 	return (
@@ -21,6 +22,7 @@ function App() {
 				<Route path="/rides" element={<Rides />} />
 				<Route path="/login" element={<Login />} />
               	<Route path="/signup" element={<SignUp />} />
+				  <Route path="/message" element={<Messages />} />
 			</Routes>
 		</Router>
 	);
