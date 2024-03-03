@@ -12,6 +12,8 @@ app.use(express.json());
 
 //express app - like a int main() from c++ 
 
+//testing with local uri
+const uri = process.env.MONGO_URI
 
 //middle ware 
 app.use(express.json())
@@ -26,11 +28,11 @@ app.get('/' , (req, res) => {
 })
 
 //connect to db
-mongoose.connect(process.env.MONG_URI)
+mongoose.connect(uri)
   .then(() => {
     //listen for requests
-    app.listen(process.env.PORT, () => {
-      console.log('connected to db & listening on port' , process.env.PORT)
+    app.listen(4000, () => {
+      console.log('connected to db & listening on port' , 4000)
     })
   })
   .catch((error) => {
