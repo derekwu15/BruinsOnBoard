@@ -11,11 +11,11 @@ const Navbar = () => {
         			<NavLink to="/" activeStyle>
         				Home
         			</NavLink>
-					<NavLink to="/about" activeStyle>
-						About
+					<NavLink to="/rides" activeStyle>
+						Rides
 					</NavLink>
 					<NavLink to="/login" activeStyle>
-						Login
+						Profile
 					</NavLink>
 				</NavMenu>
 			</Nav>
