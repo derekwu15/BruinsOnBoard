@@ -51,6 +51,7 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "@babel/plugin-proposal-private-property-in-object": "^7.14.5"
   }
 }

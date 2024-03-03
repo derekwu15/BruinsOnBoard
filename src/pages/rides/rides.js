@@ -1,7 +1,10 @@
+// Filename - pages/rides/rides.js
+
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -13,61 +16,93 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #333; /* Darken the title color for better readability */
+  font-size: 4rem;
+  margin-bottom: 0.1rem;
+  margin-top: 0rem;
+  font-family: 'GT America Mono', monospace;
+  letter-spacing: -4px;
 `;
 
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center items horizontally */
-  width: 30%; /* Adjusted width for better spacing */
-  margin-top: 1.5rem; /* Added top margin for separation from the title */
+  align-items: center;
+  width: 30%;
+  margin-top: 0.75rem;
 `;
 
 const FormSection = styled.div`
-  width: 100%; /* Utilize full width for each section */
-  margin: 0.5rem 0;
-  text-align: left; /* Align text to the left */
+  width: 100%;
+  margin: 0.5rem;
+  text-align: left;
 `;
 
 const Label = styled.label`
-  display: block; /* Ensure labels are on a new line */
-  margin-bottom: 0.5rem;
-  font-weight: bold; /* Make labels bold for emphasis */
-  font-size: 1.2rem; /* Adjust the font size for labels */
+  display: flex;
+  margin-bottom: 0.25rem;
+  color: #262626;
+  font-weight: bold;
+  font-size: 1.2rem;
+  font-family: 'GT America Mono', monospace;
 `;
 
 const StyledSelect = styled.select`
-  width: 100%; /* Utilize full width for the select */
+  width: 100%;
   padding: 0.5rem;
   margin: 0.5rem 0;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 1.2rem; /* Adjust the font size for the select */
+  cursor: pointer;
+  color: #333;
+  font-size: 1.2rem;
+  font-family: 'GT America Mono', monospace;
 `;
 
 const DatePickerStyled = styled(DatePicker)`
-  width: 140%; /* Utilize full width for the date picker */
+  width: 140%; 
   padding: 0.5rem;
   margin: 0.5rem 0;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 1.2rem; /* Adjust the font size for the date picker */
+  cursor: pointer;
+  color: #333;
+  font-size: 1.2rem;
+  font-family: 'GT America Mono', monospace;
+  text-transform: uppercase;
 `;
 
 const DateTimePickerContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align items to the left */
-  width: 30%; /* Adjusted width for better spacing */
-  margin-top: 1rem;
+  align-items: flex-start;
+  width: 30%;
+  margin-top: 0.75rem;
+`;
+
+const Button = styled.button`
+  background-color: #36454F;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px;
+  font-size: 1.2rem;
+  font-family: 'GT America Mono', monospace;
+  width: 170px;
+`;
+
+const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 0.75rem;
 `;
 
 const Rides = () => {
   const [fromLocation, setFromLocation] = useState("lax");
   const [toLocation, setToLocation] = useState("ucla");
+  const locationOptions = ["ucla", "lax"].sort();
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleFromChange = (e) => {
     const selectedFromLocation = e.target.value;
@@ -81,27 +116,20 @@ const Rides = () => {
     setFromLocation(selectedToLocation === "ucla" ? "lax" : "ucla");
   };
 
-  const locationOptions = ["ucla", "lax"].sort();
-  const currentDateTime = new Date();
-  const [selectedDate, setSelectedDate] = useState(currentDateTime);
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
+  const isToday = selectedDate.toDateString() === new Date().toDateString();
+  const minTime = isToday ? new Date() : new Date().setHours(0, 0, 0, 0);
+
   return (
     <Container>
-      <Title>Need a Ride?</Title>
-
-      {/* From and To dropdowns side by side */}
+      <Title>NEED A RIDE?</Title>
       <FormContainer>
         <FormSection>
-          <Label htmlFor="fromLocation">From:</Label>
-          <StyledSelect
-            id="fromLocation"
-            value={fromLocation}
-            onChange={handleFromChange}
-          >
+          <Label htmlFor="fromLocation">FROM:</Label>
+          <StyledSelect id="fromLocation" value={fromLocation} onChange={handleFromChange}>
             {locationOptions.map((option) => (
               <option key={option} value={option}>
                 {option.toUpperCase()}
@@ -109,14 +137,9 @@ const Rides = () => {
             ))}
           </StyledSelect>
         </FormSection>
-
         <FormSection>
-          <Label htmlFor="toLocation">To:</Label>
-          <StyledSelect
-            id="toLocation"
-            value={toLocation}
-            onChange={handleToChange}
-          >
+          <Label htmlFor="toLocation">TO:</Label>
+          <StyledSelect id="toLocation" value={toLocation} onChange={handleToChange}>
             {locationOptions.map((option) => (
               <option key={option} value={option}>
                 {option.toUpperCase()}
@@ -125,18 +148,27 @@ const Rides = () => {
           </StyledSelect>
         </FormSection>
       </FormContainer>
-
-      {/* Date and Time Picker */}
       <DateTimePickerContainer>
-        <Label htmlFor="datePicker">When:</Label>
+        <Label htmlFor="datePicker">WHEN:</Label>
         <DatePickerStyled
           selected={selectedDate}
           onChange={handleDateChange}
           showTimeSelect
-          dateFormat="Pp"
-          minDate={currentDateTime}
+          dateFormat="MMMM d, yyyy h:mm aa"
+          timeFormat="h:mm aa"
+          timeIntervals={30}
+          timeCaption="Time"
+          minDate={new Date()}
+          minTime={new Date(minTime)}
+          maxTime={new Date().setHours(23, 30)}
         />
       </DateTimePickerContainer>
+      <FormContainer>
+        <ButtonsContainer>
+          <Link to="/ridesFind"><Button>FIND</Button></Link>
+          <Link to="/ridesCreate"><Button>CREATE</Button></Link>
+        </ButtonsContainer>
+      </FormContainer>
     </Container>
   );
 };
