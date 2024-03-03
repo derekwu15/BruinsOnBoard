@@ -8,7 +8,10 @@ const Schema = mongoose.Schema
 const profileSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
+    trim: true,
+    minlength: 3
   },
   email: {
     type: String,
