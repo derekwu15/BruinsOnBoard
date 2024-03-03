@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import Home from "./pages/home/home";
 import About from "./pages/about/about";
+import Login from "./pages/profile/login";
 import SignUp from "./pages/profile/signup";
 
 function App() {
@@ -18,10 +19,8 @@ function App() {
 			<Routes>
 				<Route exact path="/" element={<Home />} />
 				<Route path="/about" element={<About />} />
-				<Route
-					path="/sign-up"
-					element={<SignUp />}
-				/>
+				<Route path="/login" element={<Login />} />
+              	<Route path="/signup" element={<SignUp />} />
 			</Routes>
 		</Router>
 	);
