@@ -1,13 +1,10 @@
-// Filename - "./components/Navbar.js
-
 import React from "react";
 import styled from "styled-components";
 import { NavLink as Link } from "react-router-dom";
-import { FaUser } from "react-icons/fa";
 
 const Nav = styled.nav`
   background: #0172c0;
-  height: 80px;
+  height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,11 +31,26 @@ const NavLink = styled(Link)`
   }
 `;
 
-const ProfileIcon = styled(FaUser)`
-  color: #ffffff;
-  font-size: 24px;
+const LoginButton = styled(NavLink)`
+  display: inline-block;
+  background: #ffffff;
+  color: #000000;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 10px 20px;
+  width: 70px;
+  height: 15px;
   cursor: pointer;
-  margin-top: 25px;
+  transition: background 0.3s ease, color 0.3s ease;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 15px;
+  &:hover,
+  &.active {
+    background: #ffc52d;
+    color: #000000;
+  }
 `;
 
 const NavMenu = styled.div`
@@ -64,9 +76,9 @@ const Navbar = () => {
             Rides
           </NavLink>
         </NavMenu>
-        <NavLink to="/login" activeStyle>
-          <ProfileIcon />
-        </NavLink>
+        <LoginButton to="/login" activeStyle>
+          Login
+        </LoginButton>
       </Nav>
     </>
   );
