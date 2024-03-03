@@ -3,9 +3,15 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const profileRoutes = require('./routes/profiles')
+const app = express()
+
+//from alen's server.js
+const cors = require('cors');
+app.use(cors());
+app.use(express.json());
 
 //express app - like a int main() from c++ 
-const app = express()
+
 
 //middle ware 
 app.use(express.json())
