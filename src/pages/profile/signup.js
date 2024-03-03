@@ -1,4 +1,4 @@
-// Filename - pages/signup.js
+// Filename - pages/profile/signup.js
 
 import React from "react";
 

@@ -7,11 +7,9 @@ import {
 	Routes,
 	Route,
 } from "react-router-dom";
-import Home from "./pages";
-import About from "./pages/About";
-import Blogs from "./pages/blogs";
-import SignUp from "./pages/signup";
-import Contact from "./pages/contact";
+import Home from "./pages/home/home";
+import About from "./pages/about/about";
+import SignUp from "./pages/profile/signup";
 
 function App() {
 	return (
@@ -20,11 +18,6 @@ function App() {
 			<Routes>
 				<Route exact path="/" element={<Home />} />
 				<Route path="/about" element={<About />} />
-				<Route
-					path="/contact"
-					element={<Contact />}
-				/>
-				<Route path="/blogs" element={<Blogs />} />
 				<Route
 					path="/sign-up"
 					element={<SignUp />}
