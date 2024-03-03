@@ -24,7 +24,7 @@ app.use((req,res, next) => {
 
 //routes
 app.get('/' , (req, res) => {
-  res.json({mssg: 'Welcome'})
+  res.json({msg: 'Welcome'})
 })
 
 //connect to db

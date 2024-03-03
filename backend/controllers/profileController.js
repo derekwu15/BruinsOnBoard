@@ -23,17 +23,17 @@ const getProfile = async (req, res) => {
     return res.status(404).json({error: "No such profile"})
   }
 
-  res.status(200).json(profiles)
+  res.status(200).json(profile)
 
 }
 
 //create a new profile
 const createProfile = async (req, res) => {
-  const {name, email, uid} = req.body
+  const {name, email,password} = req.body
 
   //add doc to database
   try {
-    const profile = await Profile.create({name, email, uid})
+    const profile = await Profile.create({name, email, password})
     res.status(200).json(profile)
   }
   catch (error) {
