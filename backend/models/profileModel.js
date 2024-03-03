@@ -17,9 +17,10 @@ const profileSchema = new Schema({
     type: String,
     required: true
   },
-  uid: {
-    type: Number,
-    required: true
+  password: {
+    type: String,
+    required: true,
+    minlength: 8
   }
 }, 
 
