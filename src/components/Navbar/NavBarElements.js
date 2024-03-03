@@ -5,51 +5,51 @@ import { NavLink as Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Nav = styled.nav`
-	background: #0172c0;
-	height: 85px;
-	display: flex;
-	justify-content: space-between;
-	padding: 0.2rem calc((100vw - 1000px) / 2);
-	z-index: 12;
+  background: #0172c0;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 12;
 `;
 
 export const NavLink = styled(Link)`
-	color: #808080;
-	display: flex;
-	align-items: center;
-	text-decoration: none;
-	padding: 0 1rem;
-	height: 100%;
-	cursor: pointer;
-	&.active {
-		color: #ffc52d;
-	}
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 10px 20px;
+  height: 100%;
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #ffc52d;
+  }
+
+  &.active {
+    color: #ffc52d;
+  }
 `;
 
 export const Bars = styled(FaBars)`
-	display: none;
-	color: #808080;
-	@media screen and (max-width: 768px) {
-		display: block;
-		position: absolute;
-		top: 0;
-		right: 0;
-		transform: translate(-100%, 75%);
-		font-size: 1.8rem;
-		cursor: pointer;
-	}
+  display: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    display: block;
+  }
 `;
 
 export const NavMenu = styled.div`
-	display: flex;
-	align-items: center;
-	margin-right: -24px;
-	/* Second Nav */
-	/* margin-right: 24px; */
-	/* Third Nav */
-	/* width: 100vw;
-white-space: nowrap; */
-	@media screen and (max-width: 768px) {
-		display: none;
-	}
+  display: flex;
+  align-items: center;
+  margin-right: -10px;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
