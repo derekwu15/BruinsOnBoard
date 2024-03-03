@@ -17,7 +17,7 @@ const SignUpBox = styled.div`
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-top: -7.5vh; /* Adjusted to move the SignUpBox up */
+  margin-top: 5.5vh;
 `;
 
 const SignUpHeader = styled.h1`
@@ -70,6 +70,10 @@ const SignUp = () => {
       <SignUpBox>
         <SignUpHeader>Sign Up</SignUpHeader>
         <SignUpForm>
+          <SignUpLabel>
+            Name:{' '}
+            <SignUpInput type="text" name="Name" />
+          </SignUpLabel>
           <SignUpLabel>
             Email:{' '}
             <SignUpInput type="email" name="Email" />
