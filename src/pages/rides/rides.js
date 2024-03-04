@@ -1,4 +1,4 @@
-// Filename - pages/profile/rides.js
+// Filename - pages/rides/rides.js
 
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";

@@ -12,6 +12,8 @@ app.use(express.json());
 
 //express app - like a int main() from c++ 
 
+//testing with local uri
+const uri = "mongodb+srv://readWrite:readWrite1@bruinsonboard.dzmdx9f.mongodb.net/?retryWrites=true&w=majority&appName=BruinsOnBoard"
 
 //middle ware 
 app.use(express.json())
@@ -22,11 +24,11 @@ app.use((req,res, next) => {
 
 //routes
 app.get('/' , (req, res) => {
-  res.json({mssg: 'Welcome'})
+  res.json({msg: 'Welcome'})
 })
 
 //connect to db
-mongoose.connect(process.env.MONG_URI)
+mongoose.connect(uri)
   .then(() => {
     //listen for requests
     app.listen(4000, () => {
