@@ -1,6 +1,6 @@
 // Filename - pages/profile/signup.js
 
-import React from "react";
+import React, { Component } from "react";
 import styled from "styled-components";
 
 const SignUpContainer = styled.div`
@@ -17,7 +17,7 @@ const SignUpBox = styled.div`
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-top: 5.5vh;
+  margin-top: -7.5vh; /* Adjusted to move the SignUpBox up */
 `;
 
 const SignUpHeader = styled.h1`
@@ -64,29 +64,104 @@ const SignUpSubmitButton = styled.input`
   }
 `;
 
-const SignUp = () => {
-  return (
-    <SignUpContainer>
-      <SignUpBox>
-        <SignUpHeader>Sign Up</SignUpHeader>
-        <SignUpForm>
-          <SignUpLabel>
-            Name:{' '}
-            <SignUpInput type="text" name="Name" />
-          </SignUpLabel>
-          <SignUpLabel>
-            Email:{' '}
-            <SignUpInput type="email" name="Email" />
-          </SignUpLabel>
-          <SignUpLabel>
-            Password:{' '}
-            <SignUpInput type="password" name="Password" />
-          </SignUpLabel>
-          <SignUpSubmitButton type="submit" value="Submit" />
-        </SignUpForm>
-      </SignUpBox>
-    </SignUpContainer>
-  );
-};
 
-export default SignUp;
+export default class SignUp extends Component {
+  constructor(props){
+    super(props);
+
+    this.onChangeName = this.onChangeName.bind(this);
+    this.onChangeEmail = this.onChangeEmail.bind(this);
+    this.onChangePassword = this.onChangePassword.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.state = {
+      name: '',
+      email: '',
+      password: '',
+    }
+  }
+
+  onChangeName(e){
+    this.setState({
+      name: e.target.value
+    });
+  }
+
+  onChangeEmail(e){
+    this.setState({
+      email: e.target.value
+    });
+  }
+
+  onChangePassword(e){
+    this.setState({
+      password: e.target.value
+    });
+  }
+
+  handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { name, email, password} = this.state;
+
+    try {
+      const response = await fetch("http://localhost:4000/api/profiles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password}),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      console.log("Profile created successfully");
+      // Redirect or show success message as needed
+    } catch (error) {
+      console.error("Error creating profile:", error);
+      this.setState({ error: "Error creating profile" });
+    }
+  }
+
+  render() {
+    return (
+      <SignUpContainer>
+        <SignUpBox>
+          <SignUpHeader>Sign Up</SignUpHeader>
+          <SignUpForm onSubmit={this.handleSubmit}>
+            <SignUpLabel>
+              Name:{' '}
+              <SignUpInput type="text"
+              required
+              className="form-control"
+              value={this.state.name}
+              onChange={this.onChangeName} 
+              />
+            </SignUpLabel>
+            <SignUpLabel>
+              Email:{' '}
+              <SignUpInput type="text"
+              required
+              className="form-control"
+              value={this.state.email}
+              onChange={this.onChangeEmail} 
+              />
+            </SignUpLabel>
+            <SignUpLabel>
+              Password:{' '}
+              <SignUpInput type="text"
+              required
+              className="form-control"
+              value={this.state.password}
+              onChange={this.onChangePassword} 
+              />
+            </SignUpLabel>
+            <SignUpSubmitButton type="submit" value="Submit"/>
+          </SignUpForm>
+        </SignUpBox>
+      </SignUpContainer>
+    )
+  }
+}
