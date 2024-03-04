@@ -25,18 +25,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/message" element={<Messages />} />
-      </Routes>
-    </Router>
-  );
-  return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route exact path="/" element={<Home />} />
-        <Route path="/rides" element={<Rides />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/message" element={<Messages />} />
         <Route path="/ridesCreate" element={<RidesCreate />} />
         <Route path="/ridesFind" element={<RidesFind />} />
       </Routes>
