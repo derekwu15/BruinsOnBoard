@@ -33,7 +33,10 @@ const FormContainer = styled.div`
 
 const FormSection = styled.div`
   width: 100%;
-  margin: 0.5rem;
+  margin-top: 0.25rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  margin-left: 0.5rem;
   text-align: left;
 `;
 
@@ -59,7 +62,7 @@ const StyledSelect = styled.select`
 `;
 
 const DatePickerStyled = styled(DatePicker)`
-  width: 140%; 
+  width: 145%; 
   padding: 0.5rem;
   margin: 0.5rem 0;
   border: 1px solid #ccc;
@@ -76,7 +79,7 @@ const DateTimePickerContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   width: 30%;
-  margin-top: 0.75rem;
+  margin-top: 0.25rem;
 `;
 
 const Button = styled.button`
@@ -89,13 +92,13 @@ const Button = styled.button`
   margin: 10px;
   font-size: 1.2rem;
   font-family: 'GT America Mono', monospace;
-  width: 170px;
+  width: 175px;
 `;
 
 const ButtonsContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 0.75rem;
+  margin-top: 0.25rem;
 `;
 
 const Rides = () => {
