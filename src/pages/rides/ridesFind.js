@@ -2,7 +2,7 @@
 
 import React from "react";
 
-const ridesFind = () => {
+const RidesFind = () => {
 	return (
 		<div>
 			<h1>find a ride!</h1>
@@ -10,4 +10,4 @@ const ridesFind = () => {
 	);
 };
 
-export default ridesFind;
+export default RidesFind;
