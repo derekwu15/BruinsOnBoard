@@ -2,6 +2,7 @@
 
 import React, { Component } from "react";
 import styled from "styled-components";
+import {withRouter} from "react-router-dom";
 
 const SignUpContainer = styled.div`
   display: flex;
@@ -119,6 +120,9 @@ export default class SignUp extends Component {
 
       console.log("Profile created successfully");
       // Redirect or show success message as needed
+      // return <Navigate to ="/profile" />
+      this.props.history.push('/profile');
+
     } catch (error) {
       console.error("Error creating profile:", error);
       this.setState({ error: "Error creating profile" });
@@ -165,3 +169,4 @@ export default class SignUp extends Component {
     )
   }
 }
+
