@@ -7,7 +7,9 @@ const SignUpContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 100vh;
+  background: radial-gradient(circle, #ffffff, #dfebf2);
+
 `;
 
 const SignUpBox = styled.div`
