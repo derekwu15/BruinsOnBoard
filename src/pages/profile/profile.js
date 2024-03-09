@@ -7,8 +7,8 @@ const Container = styled.div`
   align-items: flex-start;
   height: 100vh;
   padding: 40px;
-  background-color: #f5f5f5;
-`;
+  background: radial-gradient(circle, #ffffff, #dfebf2);
+  `;
 
 const ProfileCard = styled.div`
   display: flex;
