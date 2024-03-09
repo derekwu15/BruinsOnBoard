@@ -2,6 +2,7 @@
 
 import React, { Component } from "react";
 import styled from "styled-components";
+import {withRouter} from "react-router-dom";
 
 const SignUpContainer = styled.div`
   display: flex;
@@ -143,7 +144,7 @@ export default class SignUp extends Component {
             </SignUpLabel>
             <SignUpLabel>
               Email:{' '}
-              <SignUpInput type="email"
+              <SignUpInput type="text"
               required
               className="form-control"
               value={this.state.email}
@@ -152,7 +153,7 @@ export default class SignUp extends Component {
             </SignUpLabel>
             <SignUpLabel>
               Password:{' '}
-              <SignUpInput type="password"
+              <SignUpInput type="text"
               required
               className="form-control"
               value={this.state.password}
