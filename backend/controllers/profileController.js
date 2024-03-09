@@ -77,6 +77,22 @@ const updateProfile = async (req,res) => {
   res.status(200).json(profile)
 } 
 
+const checkLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const profile = await Profile.findOne({ email, password });
+
+    if (!profile) {
+      return res.status(404).json({ error: "Invalid email or password" });
+    }
+
+    res.status(200).json(profile);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 //exports functions to be used in routing file under backend/routes
 module.exports = {
@@ -84,5 +100,6 @@ module.exports = {
   createProfile,
   getProfile,
   deleteProfile,
-  updateProfile
+  updateProfile,
+  checkLogin
 }
