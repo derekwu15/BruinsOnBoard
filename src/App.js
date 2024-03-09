@@ -12,6 +12,7 @@ import Login from "./pages/profile/login";
 import SignUp from "./pages/profile/signup";
 import Messages from "./pages/messages/message";
 import RidesFind from "./pages/rides/ridesFind";
+import Profile from "./pages/profile/profile"
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/message" element={<Messages />} />
         <Route path="/ridesFind" element={<RidesFind />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

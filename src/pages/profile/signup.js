@@ -2,6 +2,7 @@
 
 import React, { Component } from "react";
 import styled from "styled-components";
+import {withRouter} from "react-router-dom";
 
 const SignUpContainer = styled.div`
   display: flex;
@@ -119,9 +120,10 @@ export default class SignUp extends Component {
 
       console.log("Profile created successfully");
       // Redirect or show success message as needed
+      window.location = '/profile';
     } catch (error) {
-      console.error("Error creating profile:", error);
-      this.setState({ error: "Error creating profile" });
+      this.setState({ error: "Email/Password doesn't match our database" });
+      console.error("Invalid Email or Password", error);
     }
   }
 
@@ -130,7 +132,7 @@ export default class SignUp extends Component {
       <SignUpContainer>
         <SignUpBox>
           <SignUpHeader>Sign Up</SignUpHeader>
-          <SignUpForm onSubmit={this.handleSubmit}>
+          <SignUpForm onSubmit={this.handleSubmit} method= "POST">
             <SignUpLabel>
               Name:{' '}
               <SignUpInput type="text"
