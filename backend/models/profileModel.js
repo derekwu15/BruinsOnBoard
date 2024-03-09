@@ -8,6 +8,7 @@ const profileSchema = new Schema({
   name: {
     type: String,
     required: true,
+    unique: false,
     trim: true,
     minlength: 3
   },
