@@ -28,18 +28,17 @@ const getProfile = async (req, res) => {
 }
 
 //create a new profile
+// create a new profile
 const createProfile = async (req, res) => {
-  const {name, email,password} = req.body
+  const {name, email, password} = req.body;
 
-  //add doc to database
   try {
-    const profile = await Profile.create({name, email, password})
-    res.status(200).json(profile)
+    const profile = await Profile.create({name, email, password});
+    res.status(200).json(profile);
+  } catch (error) {
+    res.status(400).json({error: error.message});
   }
-  catch (error) {
-    res.status(400).json({error: error.message})
-  }
-}
+};
 
 //delete a profile 
 const deleteProfile = async (req, res) => {
@@ -81,13 +80,22 @@ const checkLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const profile = await Profile.findOne({ email, password });
-
+    const profile = await Profile.findOne({ email });
     if (!profile) {
       return res.status(404).json({ error: "Invalid email or password" });
     }
 
-    res.status(200).json(profile);
+    profile.comparePassword(password, (err, isMatch) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      if (!isMatch) {
+        return res.status(401).json({ error: "Invalid email or password" });
+      }
+
+      res.status(200).json(profile); // Consider only sending back non-sensitive data
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
