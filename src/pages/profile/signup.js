@@ -2,7 +2,6 @@
 
 import React, { Component } from "react";
 import styled from "styled-components";
-import {withRouter} from "react-router-dom";
 
 const SignUpContainer = styled.div`
   display: flex;
@@ -18,7 +17,7 @@ const SignUpBox = styled.div`
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-top: -7.5vh; /* Adjusted to move the SignUpBox up */
+  margin-top: -7.5vh;
 `;
 
 const SignUpHeader = styled.h1`
@@ -65,9 +64,18 @@ const SignUpSubmitButton = styled.input`
   }
 `;
 
+const ErrorMessage = styled.div`
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+`;
+
 
 export default class SignUp extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.onChangeName = this.onChangeName.bind(this);
@@ -79,22 +87,23 @@ export default class SignUp extends Component {
       name: '',
       email: '',
       password: '',
+      error:'',
     }
   }
 
-  onChangeName(e){
+  onChangeName(e) {
     this.setState({
       name: e.target.value
     });
   }
 
-  onChangeEmail(e){
+  onChangeEmail(e) {
     this.setState({
       email: e.target.value
     });
   }
 
-  onChangePassword(e){
+  onChangePassword(e) {
     this.setState({
       password: e.target.value
     });
@@ -103,7 +112,7 @@ export default class SignUp extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { name, email, password} = this.state;
+    const { name, email, password } = this.state;
 
     try {
       const response = await fetch("http://localhost:4000/api/profiles", {
@@ -111,7 +120,7 @@ export default class SignUp extends Component {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password}),
+        body: JSON.stringify({ name, email, password }),
       });
 
       if (!response.ok) {
@@ -122,45 +131,48 @@ export default class SignUp extends Component {
       // Redirect or show success message as needed
       window.location = '/profile';
     } catch (error) {
-      this.setState({ error: "Email/Password doesn't match our database" });
+      this.setState({ error: "An account already exists with the same email address" });
       console.error("Invalid Email or Password", error);
     }
   }
 
   render() {
+    const { error } = this.state;
+
     return (
       <SignUpContainer>
         <SignUpBox>
           <SignUpHeader>Sign Up</SignUpHeader>
-          <SignUpForm onSubmit={this.handleSubmit} method= "POST">
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <SignUpForm onSubmit={this.handleSubmit} method="POST">
             <SignUpLabel>
               Name:{' '}
               <SignUpInput type="text"
-              required
-              className="form-control"
-              value={this.state.name}
-              onChange={this.onChangeName} 
+                required
+                className="form-control"
+                value={this.state.name}
+                onChange={this.onChangeName}
               />
             </SignUpLabel>
             <SignUpLabel>
               Email:{' '}
               <SignUpInput type="text"
-              required
-              className="form-control"
-              value={this.state.email}
-              onChange={this.onChangeEmail} 
+                required
+                className="form-control"
+                value={this.state.email}
+                onChange={this.onChangeEmail}
               />
             </SignUpLabel>
             <SignUpLabel>
               Password:{' '}
               <SignUpInput type="text"
-              required
-              className="form-control"
-              value={this.state.password}
-              onChange={this.onChangePassword} 
+                required
+                className="form-control"
+                value={this.state.password}
+                onChange={this.onChangePassword}
               />
             </SignUpLabel>
-            <SignUpSubmitButton type="submit" value="Submit"/>
+            <SignUpSubmitButton type="submit" value="Submit" />
           </SignUpForm>
         </SignUpBox>
       </SignUpContainer>
