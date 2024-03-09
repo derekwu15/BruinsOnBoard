@@ -120,9 +120,7 @@ export default class SignUp extends Component {
 
       console.log("Profile created successfully");
       // Redirect or show success message as needed
-      // return <Navigate to ="/profile" />
-      this.props.history.push('/profile');
-
+      window.location = '/profile';
     } catch (error) {
       console.error("Error creating profile:", error);
       this.setState({ error: "Error creating profile" });
@@ -134,7 +132,7 @@ export default class SignUp extends Component {
       <SignUpContainer>
         <SignUpBox>
           <SignUpHeader>Sign Up</SignUpHeader>
-          <SignUpForm onSubmit={this.handleSubmit}>
+          <SignUpForm onSubmit={this.handleSubmit} method= "POST">
             <SignUpLabel>
               Name:{' '}
               <SignUpInput type="text"
@@ -146,7 +144,7 @@ export default class SignUp extends Component {
             </SignUpLabel>
             <SignUpLabel>
               Email:{' '}
-              <SignUpInput type="text"
+              <SignUpInput type="email"
               required
               className="form-control"
               value={this.state.email}
@@ -155,7 +153,7 @@ export default class SignUp extends Component {
             </SignUpLabel>
             <SignUpLabel>
               Password:{' '}
-              <SignUpInput type="text"
+              <SignUpInput type="password"
               required
               className="form-control"
               value={this.state.password}
@@ -169,4 +167,3 @@ export default class SignUp extends Component {
     )
   }
 }
-
