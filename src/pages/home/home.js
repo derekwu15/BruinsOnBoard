@@ -69,9 +69,9 @@ const Home = () => {
     <div>
       <MainContainer>
         <WelcomeText>Welcome to <span>BruinsOnBoard</span></WelcomeText>
-        <StyledButton>
-          <StyledLink to="/signup">Get Started</StyledLink>
-        </StyledButton>
+        <StyledLink to="/login">
+          <StyledButton>Get Started</StyledButton>
+        </StyledLink>
       </MainContainer>
       <AboutSection>
         <h1>About</h1>
