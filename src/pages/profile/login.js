@@ -150,7 +150,7 @@ export default class Login extends Component {
     return (
       <LoginContainer>
         <LoginBox>
-          <LoginHeader>Sign In</LoginHeader>
+          <LoginHeader>Log In</LoginHeader>
           {error && <ErrorMessage>{error}</ErrorMessage>}
           <Form onSubmit={this.handleSubmit} method="POST">
             <Label>
