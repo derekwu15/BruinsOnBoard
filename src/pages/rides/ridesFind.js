@@ -39,11 +39,44 @@ const CalendarContainer = styled.div`
   margin: 2rem;
 `;
 
+const EventContainer = styled.div`
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 55vw;
+    max-width: 700px;
+    max-height: 90%;
+`;
+
 const Title = styled.h1`
   font-size: 4rem;
   margin-bottom: -1rem;
   margin-top: 0rem;
   font-family: 'Playfair Display';
+`;
+
+const Label = styled.label`
+    display: block;
+    margin-top: 0rem;
+    margin-bottom: 0.25rem;
+    color: #262626;
+    font-weight: bold;
+    font-size: 2.5rem;
+    font-family: 'Raleway';
+`;
+
+const SubLabel = styled.label`
+    display: block;
+    margin-top: 0rem;
+    margin-bottom: 0.25rem;
+    color: #262626;
+    font-size: 1.5rem;
+    font-family: 'Raleway';
 `;
 
 const Button = styled.button`
@@ -77,6 +110,7 @@ const ToolbarLeftSection = styled.span`
     align-items: center;
     flex: 1;
 `;
+
 const ToolbarRightSection = styled.span`
     font-family: 'Raleway';
     display: flex;
@@ -104,10 +138,46 @@ const CustomToolbar = ({ label, onNavigate, showCreatePopup, togglePopup }) => (
 
 const RidesFind = () => {
     const [showCreatePopup, setShowCreatePopup] = useState(false);
+    const [events, setEvents] = useState([])
+    const [selectedEvent, setSelectedEvent] = useState(null);
     const togglePopup = () => setShowCreatePopup(!showCreatePopup);
-    
+    const handleAddEvent = (newEvent) => {
+        setEvents([...events, newEvent]);
+    }
+    const handleEventSelect = (event) => {
+        setSelectedEvent(event);
+    };
+
+    const handleClick = async(e) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch("http://localhost:4000/api/rides/", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            //   body: JSON.stringify({ to, from, date, time, capacity, members }),
+            });
+      
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+      
+            console.log("Got rides successfully");
+            // Redirect or show success message as needed
+          } catch (error) {
+            this.setState({ error: "failed to get rides" });
+            console.error("Invalid GET", error);
+          }
+
+    }
+
     return (
         <div>
+            <div>
+                <Button onClick = {handleClick}>refresh</Button>
+            </div>
             <GlobalStyle />
             <Container>
                 <Title>RIDES</Title>
@@ -115,17 +185,29 @@ const RidesFind = () => {
             <CalendarContainer>
                 <Calendar
                     localizer={localizer}
+                    events={events}
+                    onSelectEvent={handleEventSelect}
                     views={['week']}
                     defaultView='week'
                     step={30}
-                    timeslots={2}
+                    timeslots={1}
                     style={{ height: 500 }}
                     components={{
                         toolbar: (props) => <CustomToolbar {...props} showCreatePopup={showCreatePopup} togglePopup={togglePopup} />
                     }}
                 />
             </CalendarContainer>
-            <RidesCreate isOpen={showCreatePopup} onClose={togglePopup} />
+            {selectedEvent && (
+            <EventContainer>
+                <Button onClick={() => setSelectedEvent(null)}>X</Button>
+                <Container>
+                    <Label>{selectedEvent.title}</Label>
+                    <SubLabel>{moment(selectedEvent.start).format('MMMM D, YYYY')}</SubLabel>
+                    <SubLabel>{moment(selectedEvent.start).format('h:mm A')} TO {moment(selectedEvent.end).format('h:mm A')}</SubLabel>
+                </Container>
+            </EventContainer>
+        )}
+            <RidesCreate isOpen={showCreatePopup} onClose={togglePopup} onAddEvent={handleAddEvent} />
         </div>
     );
 };
