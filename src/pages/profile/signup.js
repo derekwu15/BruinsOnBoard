@@ -144,7 +144,7 @@ export default class SignUp extends Component {
             </SignUpLabel>
             <SignUpLabel>
               Email:{' '}
-              <SignUpInput type="email"
+              <SignUpInput type="text"
               required
               className="form-control"
               value={this.state.email}
@@ -153,7 +153,7 @@ export default class SignUp extends Component {
             </SignUpLabel>
             <SignUpLabel>
               Password:{' '}
-              <SignUpInput type="password"
+              <SignUpInput type="text"
               required
               className="form-control"
               value={this.state.password}
