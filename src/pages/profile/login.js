@@ -8,7 +8,7 @@ const LoginContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh; /* Adjusted height */
+  height: 80vh;
 `;
 
 const LoginBox = styled.div`
@@ -45,7 +45,7 @@ const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-  box-sizing: border-box; /* Ensures padding and border are included in the total width */
+  box-sizing: border-box;
 `;
 
 const SubmitButton = styled.input`
@@ -79,6 +79,16 @@ const SignUpLink = styled.p`
     }
   }
 `;
+
+const ErrorMessage = styled.div`
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+`;
+
 export default class Login extends Component {
   constructor(props){
     super(props);
@@ -90,6 +100,7 @@ export default class Login extends Component {
     this.state = {
       email: '',
       password: '',
+      error: '',
     }
   }
 
@@ -130,13 +141,16 @@ export default class Login extends Component {
       this.setState({ error: "Email/Password doesn't match our database" });
       console.error("Invalid Email or Password", error);
     }
-  }
+  };
 
   render() {
+    const { error } = this.state;
+
     return (
       <LoginContainer>
         <LoginBox>
           <LoginHeader>Sign In</LoginHeader>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
           <Form onSubmit={this.handleSubmit} method= "POST">
             <Label>
               Email:{' '}
