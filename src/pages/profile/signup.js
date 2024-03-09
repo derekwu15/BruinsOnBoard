@@ -121,8 +121,8 @@ export default class SignUp extends Component {
       // Redirect or show success message as needed
       window.location = '/profile';
     } catch (error) {
-      console.error("Error creating profile:", error);
-      this.setState({ error: "Error creating profile" });
+      this.setState({ error: "Email/Password doesn't match our database" });
+      console.error("Invalid Email or Password", error);
     }
   }
 

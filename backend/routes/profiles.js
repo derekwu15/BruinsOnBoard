@@ -6,7 +6,8 @@ const {
   createProfile,
   getProfile,
   deleteProfile,
-  updateProfile
+  updateProfile,
+  checkLogin
 } = require('../controllers/profileController')
 
 //creates instance of router 
@@ -27,5 +28,7 @@ router.delete('/:id', deleteProfile)
 //UPDATE a profile
 router.patch('/:id', updateProfile)
 
+//POST a login check
+router.post('/check-login', checkLogin)
 
 module.exports = router
