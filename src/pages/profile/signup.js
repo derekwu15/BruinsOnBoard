@@ -119,6 +119,7 @@ export default class SignUp extends Component {
 
       console.log("Profile created successfully");
       // Redirect or show success message as needed
+      window.location = '/profile';
     } catch (error) {
       console.error("Error creating profile:", error);
       this.setState({ error: "Error creating profile" });
@@ -130,7 +131,7 @@ export default class SignUp extends Component {
       <SignUpContainer>
         <SignUpBox>
           <SignUpHeader>Sign Up</SignUpHeader>
-          <SignUpForm onSubmit={this.handleSubmit}>
+          <SignUpForm onSubmit={this.handleSubmit} method= "POST">
             <SignUpLabel>
               Name:{' '}
               <SignUpInput type="text"
