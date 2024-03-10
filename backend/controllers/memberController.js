@@ -16,22 +16,26 @@ const getMember = async (req, res) => {
       return res.status(404).json({error: 'No such member'})
     }
   
-    const member = await Member.findById(id)
+    const member = await Member.findOne({user_id: id})
   
     if (!member) {
       return res.status(404).json({error: 'No such member'})
     }
     
-    res.status(200).json(Member)
+    res.status(200).json(member)
 }
 
 const createMember = async (req, res) => {
     const {username, name, bio, user_id} = req.body
+    console.log(req.body)
   
     let emptyFields = []
   
     if(!username) {
       emptyFields.push('username')
+    }
+    if(!name) {
+      emptyFields.push('name')
     }
     if(!bio) {
       emptyFields.push('bio')
@@ -42,7 +46,7 @@ const createMember = async (req, res) => {
 
     try {
         const user_id = req.user._id
-        const member = await Member.create({username, bio, user_id})
+        const member = await Member.create({username,name, bio, user_id})
 
         const responseData = {
             username: member.username,

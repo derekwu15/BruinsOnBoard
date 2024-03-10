@@ -1,4 +1,5 @@
 const Profile = require('../models/profileModel')
+const Member = require('../models/memberModel')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken');
 
@@ -39,24 +40,12 @@ const createProfile = async (req, res) => {
   try {
     const profile = await Profile.signup(email, password)
 
+    await Member.create({username: '', name: '', bio: '', user_id: profile._id})
+
     const token = createToken(profile._id)
 
     user = {email, token}
     res.status(200).json(user)
-
-
-    //testing for creating a member at same time
-    const username = ""
-    const name = ""
-    const bio = ""
-    const uid = profile._id
-
-    const response = await fetch("http://localhost:4000/api/members", {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({username, name, bio, uid})
-  } )
-    const json = await response.json()
 
     
   } catch (error) {

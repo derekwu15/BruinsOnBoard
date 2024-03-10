@@ -5,15 +5,12 @@ const Schema = mongoose.Schema
 const memberSchema = new Schema({
   username: {
     type: String,
-    required: true
   },
   name: {
     type: String,
-    required: true
   },
   bio: {
     type: String,
-    required: true
   },
   user_id: {
     type: String,

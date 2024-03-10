@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import {jwtDecode} from 'jwt-decode';
 
 const Container = styled.div`
   display: flex;
@@ -60,6 +62,39 @@ const Textarea = styled.textarea`
 `;
 
 const ProfilePage = () => {
+
+  const [member, setMember] = useState(null);
+  useEffect(() => {
+    const fetchMemberData = async () => {
+      const userString = localStorage.getItem('user');
+      const user = JSON.parse(userString);
+      const token = user.token
+      if (token) {
+        try {
+          const userId = jwtDecode(token);
+          const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
+            headers: {
+              'Authorization': 'Bearer ' + token
+          }});
+          if (!response.ok) {
+            throw new Error('Failed to fetch member data');
+          }
+
+          const memberData = await response.json();
+          console.log(memberData)
+          setMember(memberData);
+        } catch (error) {
+          console.error('Error fetching member data:', error);
+        }
+      } else {
+        console.error('JWT token not found in local storage');
+      }
+    };
+
+
+
+    fetchMemberData();
+  }, []);
   return (
     <Container>
       <ProfileCard>
@@ -68,10 +103,16 @@ const ProfilePage = () => {
           alt="Profile"
         />
         <UserInfo>
-          <h1>Name</h1>
-          <p>@username</p>
-          <p>user@example.com</p>
-          <p>User bio goes here</p>
+        {member ? (
+          <div>
+            <h1>{member.name ? member.name : "Name"}</h1>
+            <p>{member.username ? member.username : "Username"}</p>
+            <p>{member.email ? member.email : "Email"}</p>
+            <p>{member.bio ? member.bio : "Bio"}</p>
+          </div>
+        ) : (
+          <p>Loading member data...</p>
+        )}
         </UserInfo>
       </ProfileCard>
       <EditForm>
