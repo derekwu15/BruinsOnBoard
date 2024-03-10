@@ -4,6 +4,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const profileRoutes = require('./routes/profiles')
 const memberRoutes = require('./routes/members')
+const rideRoutes = require('./routes/rides')
 
 const app = express()
 
@@ -11,6 +12,8 @@ const app = express()
 const cors = require('cors');
 app.use(cors());
 app.use(express.json());
+
+//express app - like a int main() from c++ 
 
 //testing with local uri
 const uri = "mongodb+srv://readWrite:readWrite1@bruinsonboard.dzmdx9f.mongodb.net/?retryWrites=true&w=majority&appName=BruinsOnBoard"
@@ -42,3 +45,4 @@ mongoose.connect(uri)
 //testing route 
 app.use('/api/profiles', profileRoutes)
 app.use('/api/profiles', memberRoutes)
+app.use('/api/rides', rideRoutes)

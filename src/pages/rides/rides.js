@@ -93,6 +93,9 @@ const EventCalendar = () => {
     };
 
     fetchData();
+
+    const interval = setInterval(fetchData, 10000);
+    
   }, []);
 
   return (

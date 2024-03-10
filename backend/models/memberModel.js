@@ -7,6 +7,10 @@ const memberSchema = new Schema({
     type: String,
     required: true
   },
+  name: {
+    type: String,
+    required: true
+  },
   bio: {
     type: String,
     required: true
