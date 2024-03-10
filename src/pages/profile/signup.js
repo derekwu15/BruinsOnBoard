@@ -8,7 +8,9 @@ const SignUpContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 100vh;
+  background: radial-gradient(circle, #ffffff, #dfebf2);
+
 `;
 
 const SignUpBox = styled.div`
@@ -18,7 +20,7 @@ const SignUpBox = styled.div`
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-top: -7.5vh; /* Adjusted to move the SignUpBox up */
+  margin-top: -7.5vh;
 `;
 
 const SignUpHeader = styled.h1`
@@ -63,6 +65,15 @@ const SignUpSubmitButton = styled.input`
   &:hover {
     background-color: #01508b;
   }
+`;
+
+const ErrorMessage = styled.div`
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
 `;
 
 const Signup = () => {

@@ -9,7 +9,8 @@ const LoginContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh; /* Adjusted height */
+  height: 100vh;
+  background: radial-gradient(circle, #ffffff, #dfebf2);
 `;
 
 const LoginBox = styled.div`
@@ -46,7 +47,7 @@ const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-  box-sizing: border-box; /* Ensures padding and border are included in the total width */
+  box-sizing: border-box;
 `;
 
 const SubmitButton = styled.input`
