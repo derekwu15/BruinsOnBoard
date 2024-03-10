@@ -22,11 +22,11 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route exact path="/" element={user ? <Home /> : <Navigate to='/login' />}/>
+        <Route exact path="/" element={<Home />}/>
         <Route path="/login" element={!user ? <Login /> : <Navigate to='/' />} />
         <Route path="/signup" element={!user ? <SignUp /> : <Navigate to='/' />} />
         <Route path="/message" element={<Messages />} />
-        <Route path="/rides" element={<RidesFind />} />
+        <Route path="/rides" element={user ? <RidesFind /> : <Navigate to='/login' />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
