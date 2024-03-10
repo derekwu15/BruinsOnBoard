@@ -116,7 +116,7 @@ const Login = () => {
   return (
     <LoginContainer>
         <LoginBox>
-          <LoginHeader>Sign In</LoginHeader>
+          <LoginHeader>Login</LoginHeader>
           <Form onSubmit={handleSubmit} method= "POST">
             <Label>
               Email:{' '}
