@@ -97,7 +97,7 @@ const ButtonsContainer = styled.div`
     margin-top: 0.25rem;
 `;
 
-const RidesCreate = ({ isOpen, onClose }) => {
+const RidesCreate = ({ isOpen, onClose, onAddEvent }) => {
     const [fromLocation, setFromLocation] = useState("lax");
     const [toLocation, setToLocation] = useState("ucla");
     const locationOptions = ["ucla", "lax"].sort();
@@ -118,13 +118,19 @@ const RidesCreate = ({ isOpen, onClose }) => {
     const handleDateChange = (date) => {
         setSelectedDate(date);
     };
-
-    const handleCreate = () => {
-        console.log('Create ride logic goes here.');
-    };
-
+    
     const isToday = selectedDate.toDateString() === new Date().toDateString();
     const minTime = isToday ? new Date() : new Date().setHours(0, 0, 0, 0);
+
+    const handleCreate = () => {
+        const newEvent = {
+            title: `${fromLocation.toUpperCase()} TO ${toLocation.toUpperCase()}`,
+            start: selectedDate,
+            end: new Date(selectedDate.getTime() + 30 * 60 * 1000),
+        };
+        onAddEvent(newEvent);
+        onClose();
+    }
 
   if (!isOpen) return null;
 
