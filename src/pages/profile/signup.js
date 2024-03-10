@@ -2,7 +2,6 @@
 
 import React, { Component } from "react";
 import styled from "styled-components";
-import {withRouter} from "react-router-dom";
 
 const SignUpContainer = styled.div`
   display: flex;
