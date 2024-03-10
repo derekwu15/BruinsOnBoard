@@ -8,7 +8,8 @@ const LoginContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 100vh;
+  background: radial-gradient(circle, #ffffff, #dfebf2);
 `;
 
 const LoginBox = styled.div`
@@ -90,7 +91,7 @@ const ErrorMessage = styled.div`
 `;
 
 export default class Login extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.onChangeEmail = this.onChangeEmail.bind(this);
@@ -104,13 +105,13 @@ export default class Login extends Component {
     }
   }
 
-  onChangeEmail(e){
+  onChangeEmail(e) {
     this.setState({
       email: e.target.value
     });
   }
 
-  onChangePassword(e){
+  onChangePassword(e) {
     this.setState({
       password: e.target.value
     });
@@ -119,7 +120,7 @@ export default class Login extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { email, password} = this.state;
+    const { email, password } = this.state;
 
     try {
       const response = await fetch("http://localhost:4000/api/profiles/check-login", {
@@ -127,7 +128,7 @@ export default class Login extends Component {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password}),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
@@ -149,22 +150,22 @@ export default class Login extends Component {
     return (
       <LoginContainer>
         <LoginBox>
-          <LoginHeader>Sign In</LoginHeader>
+          <LoginHeader>Log In</LoginHeader>
           {error && <ErrorMessage>{error}</ErrorMessage>}
-          <Form onSubmit={this.handleSubmit} method= "POST">
+          <Form onSubmit={this.handleSubmit} method="POST">
             <Label>
               Email:{' '}
               <Input type="email" name="Email" required
-              className="form-control" 
-              value={this.state.email}
-              onChange={this.onChangeEmail} />
+                className="form-control"
+                value={this.state.email}
+                onChange={this.onChangeEmail} />
             </Label>
             <Label>
               Password:{' '}
               <Input type="password" name="Password" required
-              className="form-control"
-              value={this.state.password}
-              onChange={this.onChangePassword} />
+                className="form-control"
+                value={this.state.password}
+                onChange={this.onChangePassword} />
             </Label>
             <SubmitButton type="submit" value="Submit" />
           </Form>
