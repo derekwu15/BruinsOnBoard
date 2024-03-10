@@ -9,11 +9,11 @@ const requireAuth = require('../middleware/requireAuth')
 
 const router = express.Router()
 
+router.post('/', createMember)
+
 router.use(requireAuth)
 
 router.get('/:id', getMember)
-
-router.post('/', createMember)
 
 router.delete('/:id', deleteMember)
 
