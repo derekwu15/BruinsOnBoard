@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const Container = styled.div`
     display: flex;
@@ -122,13 +125,45 @@ const RidesCreate = ({ isOpen, onClose, onAddEvent }) => {
     const isToday = selectedDate.toDateString() === new Date().toDateString();
     const minTime = isToday ? new Date() : new Date().setHours(0, 0, 0, 0);
 
-    const handleCreate = () => {
+    const handleCreate = async (e) => {
+        e.preventDefault();
+
         const newEvent = {
             title: `${fromLocation.toUpperCase()} TO ${toLocation.toUpperCase()}`,
             start: selectedDate,
             end: new Date(selectedDate.getTime() + 30 * 60 * 1000),
         };
         onAddEvent(newEvent);
+
+        // const { name, email, password } = this.state;
+        const to = toLocation.toUpperCase();
+        const from = fromLocation.toUpperCase();
+        const date = moment(selectedDate).format('MMMM D, YYYY'); // Ensure selectedDate is already defined in your component's state
+        const time = moment(selectedDate.getTime()).format('h:mm A');
+        const capacity = 1;
+        const members = ["test"];
+    
+        try {
+          const response = await fetch("http://localhost:4000/api/rides/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ to, from, date, time, capacity, members })
+          });
+    
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+    
+          console.log("Ride created successfully");
+          // Redirect or show success message as needed
+        } catch (error) {
+          this.setState({ error: "Failed to create ride" });
+          console.error("Invalid", error);
+        }
+
+
         onClose();
     }
 

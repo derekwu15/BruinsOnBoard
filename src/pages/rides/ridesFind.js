@@ -148,8 +148,36 @@ const RidesFind = () => {
         setSelectedEvent(event);
     };
 
+    const handleClick = async(e) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch("http://localhost:4000/api/rides/", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            //   body: JSON.stringify({ to, from, date, time, capacity, members }),
+            });
+      
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+      
+            console.log("Got rides successfully");
+            // Redirect or show success message as needed
+          } catch (error) {
+            this.setState({ error: "failed to get rides" });
+            console.error("Invalid GET", error);
+          }
+
+    }
+
     return (
         <div>
+            <div>
+                <Button onClick = {handleClick}>refresh</Button>
+            </div>
             <GlobalStyle />
             <Container>
                 <Title>RIDES</Title>
