@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const profileRoutes = require('./routes/profiles')
 const memberRoutes = require('./routes/members')
 const rideRoutes = require('./routes/rides')
+const sendEmail = require('./controllers/sendEmail')
 
 const app = express()
 
@@ -42,7 +43,20 @@ mongoose.connect(uri)
     console.log(error)
   })
 
+// Send email
+app.post('/api/sendEmail', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    await sendEmail({ email }); // Call the sendEmail function with the recipient email address
+    res.status(200).json({ message: 'Email sent successfully' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ error: 'An error occurred while sending the email' });
+  }
+});
+
 //testing route 
 app.use('/api/profiles', profileRoutes)
-app.use('/api/profiles', memberRoutes)
+app.use('/api/members', memberRoutes)
 app.use('/api/rides', rideRoutes)
