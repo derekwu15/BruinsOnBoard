@@ -3,6 +3,8 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const profileRoutes = require('./routes/profiles')
+const memberRoutes = require('./routes/members')
+
 const app = express()
 
 //from alen's server.js
@@ -41,4 +43,4 @@ mongoose.connect(uri)
 
 //testing route 
 app.use('/api/profiles', profileRoutes)
-
+app.use('/api/profiles', memberRoutes)
