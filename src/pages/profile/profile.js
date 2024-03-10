@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -72,6 +71,8 @@ const ProfilePage = () => {
           Bio:
           <textarea placeholder="Enter your bio"></textarea>
         </label>
+        <br/>
+        <button>Save</button>
       </EditForm>
     </Container>
   );
