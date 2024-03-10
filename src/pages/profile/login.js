@@ -1,8 +1,9 @@
 // Filename - pages/profile/login.js
 
-import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import {useLogin} from '../../hooks/useLogin'
+import {useState} from 'react';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -81,99 +82,43 @@ const SignUpLink = styled.p`
   }
 `;
 
-const ErrorMessage = styled.div`
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 15px;
-  text-align: center;
-`;
+const Login = () => {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const {login, error, isLoading} = useLogin()
 
-export default class Login extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-
-    this.state = {
-      email: '',
-      password: '',
-      error: '',
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    await login(email, password)
   }
 
-  onChangeEmail(e) {
-    this.setState({
-      email: e.target.value
-    });
-  }
-
-  onChangePassword(e) {
-    this.setState({
-      password: e.target.value
-    });
-  }
-
-  handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const { email, password } = this.state;
-
-    try {
-      const response = await fetch("http://localhost:4000/api/profiles/check-login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      console.log("Profile exists");
-      // Redirect or show success message as needed
-      window.location = '/profile';
-    } catch (error) {
-      this.setState({ error: "Email/Password doesn't match our database" });
-      console.error("Invalid Email or Password", error);
-    }
-  };
-
-  render() {
-    const { error } = this.state;
-
-    return (
-      <LoginContainer>
+  return (
+    <LoginContainer>
         <LoginBox>
-          <LoginHeader>Log In</LoginHeader>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          <Form onSubmit={this.handleSubmit} method="POST">
+          <LoginHeader>Sign In</LoginHeader>
+          <Form onSubmit={handleSubmit} method= "POST">
             <Label>
               Email:{' '}
               <Input type="email" name="Email" required
-                className="form-control"
-                value={this.state.email}
-                onChange={this.onChangeEmail} />
+              className="form-control" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} />
             </Label>
             <Label>
               Password:{' '}
               <Input type="password" name="Password" required
-                className="form-control"
-                value={this.state.password}
-                onChange={this.onChangePassword} />
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} />
             </Label>
-            <SubmitButton type="submit" value="Submit" />
+            <SubmitButton disabled={isLoading} type="submit" value="Submit" />
+            {error && <div className="error">{error}</div>}
           </Form>
           <SignUpLink>
             Don't have an account? <Link to="/signup">Sign Up</Link>
           </SignUpLink>
         </LoginBox>
       </LoginContainer>
-    );
-  }
+  )
 }
+export default Login

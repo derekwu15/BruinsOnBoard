@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { NavLink as Link } from "react-router-dom";
+import {useLogout} from '../../hooks/useLogout'
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const Nav = styled.nav`
   background: #0172c0;
@@ -53,6 +55,28 @@ const LoginButton = styled(NavLink)`
   }
 `;
 
+const LogOutButton = styled(NavLink)`
+  display: inline-block;
+  background: #ffffff;
+  color: #000000;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 10px 20px;
+  width: 70px;
+  height: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 15px;
+  &:hover,
+  &.active {
+    background: #ffc52d;
+    color: #000000;
+  }
+`;
+
 const NavMenu = styled.div`
   display: flex;
   align-items: center;
@@ -65,6 +89,11 @@ const NavMenu = styled.div`
 `;
 
 const Navbar = () => {
+  const {logout} = useLogout()
+  const { user } = useAuthContext()
+  const handleClick = () => {
+    logout()
+  }
   return (
     <>
       <Nav>
@@ -76,9 +105,17 @@ const Navbar = () => {
             Rides
           </NavLink>
         </NavMenu>
-        <LoginButton to="/login" activeStyle>
-          Login
-        </LoginButton>
+        {user && (
+          <div>
+            <span>{user.email}</span>
+            <LogOutButton onClick={handleClick}>Log out</LogOutButton>
+          </div>
+        )}
+        {!user && (
+          <LoginButton to="/login" activeStyle>
+            Login
+          </LoginButton>
+        )}
       </Nav>
     </>
   );

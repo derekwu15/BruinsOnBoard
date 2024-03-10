@@ -1,7 +1,8 @@
 // Filename - pages/profile/signup.js
 
-import React, { Component } from "react";
 import styled from "styled-components";
+import {useState} from 'react';
+import { useSignup } from "../../hooks/useSignup";
 
 const SignUpContainer = styled.div`
   display: flex;
@@ -75,109 +76,45 @@ const ErrorMessage = styled.div`
   text-align: center;
 `;
 
+const Signup = () => {
+  const [email,setEmail] = useState('')
+  const [password,setPassword] = useState('')
+  const {signup, error, isLoading} = useSignup()
 
-export default class SignUp extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-
-    this.state = {
-      name: '',
-      email: '',
-      password: '',
-      error:'',
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    await signup(email, password)
+  
   }
 
-  onChangeName(e) {
-    this.setState({
-      name: e.target.value
-    });
-  }
-
-  onChangeEmail(e) {
-    this.setState({
-      email: e.target.value
-    });
-  }
-
-  onChangePassword(e) {
-    this.setState({
-      password: e.target.value
-    });
-  }
-
-  handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const { name, email, password } = this.state;
-
-    try {
-      const response = await fetch("http://localhost:4000/api/profiles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      console.log("Profile created successfully");
-      // Redirect or show success message as needed
-      window.location = '/profile';
-    } catch (error) {
-      this.setState({ error: "An account already exists with the same email address" });
-      console.error("Invalid Email or Password", error);
-    }
-  }
-
-  render() {
-    const { error } = this.state;
-
-    return (
-      <SignUpContainer>
+  return (
+    <SignUpContainer>
         <SignUpBox>
           <SignUpHeader>Sign Up</SignUpHeader>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          <SignUpForm onSubmit={this.handleSubmit} method="POST">
-            <SignUpLabel>
-              Name:{' '}
-              <SignUpInput type="text"
-                required
-                className="form-control"
-                value={this.state.name}
-                onChange={this.onChangeName}
-              />
-            </SignUpLabel>
+          <SignUpForm onSubmit={handleSubmit} method= "POST">
             <SignUpLabel>
               Email:{' '}
-              <SignUpInput type="email"
-                required
-                className="form-control"
-                value={this.state.email}
-                onChange={this.onChangeEmail}
+              <SignUpInput type="text"
+              required
+              className="form-control"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} 
               />
             </SignUpLabel>
             <SignUpLabel>
               Password:{' '}
-              <SignUpInput type="password"
-                required
-                className="form-control"
-                value={this.state.password}
-                onChange={this.onChangePassword}
+              <SignUpInput type="text"
+              required
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} 
               />
             </SignUpLabel>
-            <SignUpSubmitButton type="submit" value="Submit" />
+            <SignUpSubmitButton disabled={isLoading} type="submit" value="Submit"/>
+            {error && <div clasName='error'>{error}</div>}
           </SignUpForm>
         </SignUpBox>
       </SignUpContainer>
-    )
-  }
+  )
 }
+export default Signup
