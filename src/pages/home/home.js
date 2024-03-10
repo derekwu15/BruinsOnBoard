@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import {Navigate} from "react-router-dom";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 // Styled component for the main container
 const MainContainer = styled.div`
@@ -65,11 +67,12 @@ const StyledLink = styled(Link)`
 
 
 const Home = () => {
+  const { user } = useAuthContext();
   return (
     <div>
       <MainContainer>
         <WelcomeText>Welcome to <span>BruinsOnBoard</span></WelcomeText>
-        <StyledLink to="/login">
+        <StyledLink to={user ? '/rides' : '/signup'}>
           <StyledButton>Get Started</StyledButton>
         </StyledLink>
       </MainContainer>
