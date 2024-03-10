@@ -43,6 +43,22 @@ const createProfile = async (req, res) => {
 
     user = {email, token}
     res.status(200).json(user)
+
+
+    //testing for creating a member at same time
+    const username = ""
+    const name = ""
+    const bio = ""
+    const uid = profile._id
+
+    const response = await fetch("http://localhost:4000/api/members", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username, name, bio, uid})
+  } )
+    const json = await response.json()
+
+    
   } catch (error) {
     res.status(400).json({error: error.message})
   }

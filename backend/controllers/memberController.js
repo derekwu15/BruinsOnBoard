@@ -26,7 +26,7 @@ const getMember = async (req, res) => {
 }
 
 const createMember = async (req, res) => {
-    const {username, bio} = req.body
+    const {username, name, bio, user_id} = req.body
   
     let emptyFields = []
   
@@ -46,6 +46,7 @@ const createMember = async (req, res) => {
 
         const responseData = {
             username: member.username,
+            name: member.name,
             bio: member.bio,
             user_id: member.user_id,
             createdAt: member.createdAt,
