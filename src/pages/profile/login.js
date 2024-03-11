@@ -2,8 +2,8 @@
 
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import {useLogin} from '../../hooks/useLogin'
-import {useState} from 'react';
+import { useLogin } from '../../hooks/useLogin'
+import { useState } from 'react';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -84,7 +84,7 @@ const SignUpLink = styled.p`
 const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const {login, error, isLoading} = useLogin()
+  const { login, error, isLoading } = useLogin()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -93,31 +93,31 @@ const Login = () => {
 
   return (
     <LoginContainer>
-        <LoginBox>
-          <LoginHeader>Login</LoginHeader>
-          <Form onSubmit={handleSubmit} method= "POST">
-            <Label>
-              Email:{' '}
-              <Input type="email" name="Email" required
-              className="form-control" 
+      <LoginBox>
+        <LoginHeader>Login</LoginHeader>
+        <Form onSubmit={handleSubmit} method="POST">
+          <Label>
+            Email:{' '}
+            <Input type="email" name="Email" required
+              className="form-control"
               value={email}
               onChange={(e) => setEmail(e.target.value)} />
-            </Label>
-            <Label>
-              Password:{' '}
-              <Input type="password" name="Password" required
+          </Label>
+          <Label>
+            Password:{' '}
+            <Input type="password" name="Password" required
               className="form-control"
               value={password}
               onChange={(e) => setPassword(e.target.value)} />
-            </Label>
-            <SubmitButton disabled={isLoading} type="submit" value="Submit" />
-            {error && <div className="error">{error}</div>}
-          </Form>
-          <SignUpLink>
-            Don't have an account? <Link to="/signup">Sign Up</Link>
-          </SignUpLink>
-        </LoginBox>
-      </LoginContainer>
+          </Label>
+          <SubmitButton disabled={isLoading} type="submit" value="Submit" />
+          {error && <div className="error">{error}</div>}
+        </Form>
+        <SignUpLink>
+          Don't have an account? <Link to="/signup">Sign Up</Link>
+        </SignUpLink>
+      </LoginBox>
+    </LoginContainer>
   )
 }
 export default Login

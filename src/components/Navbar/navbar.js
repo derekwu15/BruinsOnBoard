@@ -4,14 +4,21 @@ import { useLogout } from '../../hooks/useLogout'
 import { useAuthContext } from "../../hooks/useAuthContext";
 import logo from '../../logo.png';
 import { FaUserCircle } from 'react-icons/fa';
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { logout } = useLogout()
   const { user } = useAuthContext()
   const [dropdown, setDropdown] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setDropdown(!dropdown);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   return (
@@ -28,21 +35,20 @@ const Navbar = () => {
             </NavLink>
           )}
           {user && (
-          <SearchButton to="/search" activeStyle>
-            Search Users
-          </SearchButton>
+            <SearchButton to="/search" activeStyle>
+              Search Users
+            </SearchButton>
           )}
         </NavMenu>
         <NavMenu>
           {user && (
             <ProfileButton onClick={toggleDropdown}>
-              <FaUserCircle size={30}/>
+              <FaUserCircle size={30} />
               <DropdownMenu>
                 <DropdownLink to="/profile" activeStyle>
                   Your Profile
                 </DropdownLink>
-                <DropdownLink as="LogoutButton" onClick={() => logout()} activeStyle>
-                  Log out
+                <DropdownLink as="LogoutButton" onClick={handleLogout} activeStyle>                  Log out
                 </DropdownLink>
               </DropdownMenu>
             </ProfileButton>

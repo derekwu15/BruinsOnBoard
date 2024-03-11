@@ -14,21 +14,21 @@ const cors = require('cors');
 app.use(cors());
 app.use(express.json());
 
-//express app - like a int main() from c++ 
+//express app - like a int main() from c++
 
 //testing with local uri
 const uri = "mongodb+srv://readWrite:readWrite1@bruinsonboard.dzmdx9f.mongodb.net/?retryWrites=true&w=majority&appName=BruinsOnBoard"
 
-//middle ware 
+//middle ware
 app.use(express.json())
-app.use((req,res, next) => {
+app.use((req, res, next) => {
   console.log(req.path, req.path)
   next()
 })
 
 //routes
-app.get('/' , (req, res) => {
-  res.json({msg: 'Welcome'})
+app.get('/', (req, res) => {
+  res.json({ msg: 'Welcome' })
 })
 
 //connect to db
@@ -36,7 +36,7 @@ mongoose.connect(uri)
   .then(() => {
     //listen for requests
     app.listen(4000, () => {
-      console.log('connected to db & listening on port' , 4000)
+      console.log('connected to db & listening on port', 4000)
     })
   })
   .catch((error) => {
@@ -45,7 +45,7 @@ mongoose.connect(uri)
 
 // Send email
 app.post('/api/sendEmail', async (req, res) => {
-  const { email, title, start, end, displayName} = req.body;
+  const { email, title, start, end, displayName } = req.body;
 
   try {
     await sendEmail({ email, title, start, end, displayName }); // Call the sendEmail function with the recipient email address
@@ -56,7 +56,7 @@ app.post('/api/sendEmail', async (req, res) => {
   }
 });
 
-//testing route 
+//testing route
 app.use('/api/profiles', profileRoutes)
 app.use('/api/members', memberRoutes)
 app.use('/api/rides', rideRoutes)

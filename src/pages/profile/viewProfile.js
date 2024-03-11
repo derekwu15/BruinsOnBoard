@@ -1,8 +1,14 @@
 import { Container, ProfileCard, ProfileImage, UserInfo } from './styledProfiles';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from "../../hooks/useAuthContext";
+
 
 const ViewProfiles = () => {
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
+
   const { userId } = useParams();
   console.log('Received userId:', userId); // Added console.log
 
@@ -10,6 +16,13 @@ const ViewProfiles = () => {
   const [email, setEmail] = useState('');
 
   useEffect(() => {
+    if (!user) {
+      console.error('JWT token not found in local storage');
+      navigate('/login');
+      return;
+    }
+
+
     const fetchMemberData = async () => {
       const userString = localStorage.getItem('user');
       const user = userString ? JSON.parse(userString) : null;

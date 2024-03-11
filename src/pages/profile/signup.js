@@ -1,7 +1,7 @@
 // Filename - pages/profile/signup.js
 
 import styled from "styled-components";
-import {useState} from 'react';
+import { useState } from 'react';
 import { useSignup } from "../../hooks/useSignup";
 
 const SignUpContainer = styled.div`
@@ -66,44 +66,44 @@ const SignUpSubmitButton = styled.input`
 `;
 
 const Signup = () => {
-  const [email,setEmail] = useState('')
-  const [password,setPassword] = useState('')
-  const {signup, error, isLoading} = useSignup()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const { signup, error, isLoading } = useSignup()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     await signup(email, password)
-  
+
   }
 
   return (
     <SignUpContainer>
-        <SignUpBox>
-          <SignUpHeader>Sign Up</SignUpHeader>
-          <SignUpForm onSubmit={handleSubmit} method= "POST">
-            <SignUpLabel>
-              Email:{' '}
-              <SignUpInput type="email"
+      <SignUpBox>
+        <SignUpHeader>Sign Up</SignUpHeader>
+        <SignUpForm onSubmit={handleSubmit} method="POST">
+          <SignUpLabel>
+            Email:{' '}
+            <SignUpInput type="email"
               required
               className="form-control"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} 
-              />
-            </SignUpLabel>
-            <SignUpLabel>
-              Password:{' '}
-              <SignUpInput type="password"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </SignUpLabel>
+          <SignUpLabel>
+            Password:{' '}
+            <SignUpInput type="password"
               required
               className="form-control"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} 
-              />
-            </SignUpLabel>
-            <SignUpSubmitButton disabled={isLoading} type="submit" value="Submit"/>
-            {error && <div clasName='error'>{error}</div>}
-          </SignUpForm>
-        </SignUpBox>
-      </SignUpContainer>
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </SignUpLabel>
+          <SignUpSubmitButton disabled={isLoading} type="submit" value="Submit" />
+          {error && <div clasName='error'>{error}</div>}
+        </SignUpForm>
+      </SignUpBox>
+    </SignUpContainer>
   )
 }
 export default Signup
