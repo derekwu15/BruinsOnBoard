@@ -3,6 +3,8 @@ import './boxContainer.css';
 import about from './about.png';
 import ride from './carpool.png';
 import profile from './profile.png';
+import { useAuthContext } from "../../hooks/useAuthContext";
+
 
 // Box component
 const Box = ({ imageUrl, buttonText, link, text}) => {
@@ -19,24 +21,25 @@ const Box = ({ imageUrl, buttonText, link, text}) => {
 
 // Main container component
 const BoxContainer = () => {
+  const { user } = useAuthContext();
   return (
     <div className="box-container">
       <Box 
         imageUrl={about} 
         buttonText="About Us" 
-        link="about-us.html" 
+        link="about"
         text = "We are a community-focused rideshare solution exclusively for UCLA students, designed to connect Bruins so they can share an Uber ride and split the costs"
       />
       <Box 
         imageUrl={ride} 
         buttonText="Find a Ride" 
-        link="create-ride.html" 
+        link={user ? 'rides' : 'login'}
         text="Enter your destination and schedule to find fellow Bruins who are heading the same way"
       />
       <Box 
         imageUrl={profile} 
         buttonText="Create a Profile" 
-        link="create-ride.html" 
+        link={user ? 'profile' : 'signup'}
         text="Create a Profile now to start connecting with other students!"
       />
     </div>

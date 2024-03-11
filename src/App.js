@@ -13,6 +13,7 @@ import RidesFind from "./pages/rides/rides";
 import Profile from "./pages/profile/profile"
 import ViewProfile from "./pages/profile/viewProfile"
 import MemberSearch from "./pages/profile/searchProfile";
+import About from "./pages/about/about"
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/message" element={<Messages />} />
         <Route path="/rides" element={<RidesFind />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </Router>
   );

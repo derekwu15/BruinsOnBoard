@@ -27,10 +27,11 @@ const Navbar = () => {
               Rides
             </NavLink>
           )}
+          {user && (
           <SearchButton to="/search" activeStyle>
             Search Users
           </SearchButton>
-
+          )}
         </NavMenu>
         <NavMenu>
           {user && (
