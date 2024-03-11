@@ -5,6 +5,7 @@ import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import styled from "styled-components";
+import {jwtDecode} from 'jwt-decode';
 
 const Container = styled.div`
     display: flex;
@@ -159,11 +160,47 @@ const EventCalendar = () => {
   // popup for clicking on an event, need to add join ride, quantitty, to/from/when
   const [showEvent, setShowEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null); 
+  const [member, setMember] = useState(null);
 
   const handleEventClick = (event) => {
     setSelectedEvent(event);
     setShowEvent(true);
   };
+
+  const handleJoin = async(event_id, capacity, members) => {
+
+    
+    console.log(member.name)
+
+    console.log(event_id)
+    
+    members.push(member.name)
+  
+    capacity -= 1 
+
+
+    try {
+      const response = await fetch("http://localhost:4000/api/rides/" + event_id, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({members, capacity})
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      console.log("Ride Patched successfully");
+      // Redirect or show success message as needed
+    } catch (error) {
+      //this.setState({ error: "Failed to create ride" });
+      console.error("Invalid", error);
+    }
+
+
+  }
 
   // stylized popup for ride information
   const EventsPopup = ({ event, onClose }) => (
@@ -174,8 +211,9 @@ const EventCalendar = () => {
       <PopupSubLabel>{moment(event.start).format('h:mm A')} - {moment(event.end).format('h:mm A')}</PopupSubLabel>
       <PopupSubLabel>capacity: {event.capacity}</PopupSubLabel>
       <PopupSubLabel>members: {event.members.join(', ')}</PopupSubLabel>
+      {/* <PopupLabel>ID = {event.id}</PopupLabel> */}
       <ButtonsContainer>
-        <EventPopupButton>JOIN</EventPopupButton>
+        <EventPopupButton onClick={() => handleJoin(event.id, event.capacity, event.members)}>JOIN</EventPopupButton>
         <EventPopupButton onClick={onClose}>CLOSE</EventPopupButton>
       </ButtonsContainer>
     </EventAlignContainer>
@@ -276,8 +314,35 @@ const EventCalendar = () => {
 
     fetchData();
 
-    const interval = setInterval(fetchData, 10000);
+    // const interval = setInterval(fetchData, 10000);
     
+    const fetchMemberData = async () => {
+      const userString = localStorage.getItem('user');
+      const user = JSON.parse(userString);
+      const token = user.token
+      if (token) {
+        try {
+          const userId = jwtDecode(token);
+          const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
+            headers: {
+              'Authorization': 'Bearer ' + token
+          }});
+          if (!response.ok) {
+            throw new Error('Failed to fetch member data');
+          }
+
+          const memberData = await response.json();
+          console.log(memberData)
+          setMember(memberData);
+        } catch (error) {
+          console.error('Error fetching member data:', error);
+        }
+      } else {
+        console.error('JWT token not found in local storage');
+      }
+    };
+
+    fetchMemberData();
   }, []);
 
   return (
