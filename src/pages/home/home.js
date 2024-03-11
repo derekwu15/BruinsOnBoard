@@ -1,88 +1,21 @@
 import React from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
-import {Navigate} from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import './home.css';
-import logo from '../../logo.png';
-
-// Styled component for the main container
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
-  background: radial-gradient(circle, #ffffff, #dfebf2);
-`;
-
-// Styled component for the Welcome text
-const WelcomeText = styled.h1`
-  font-size: 5rem;
-  margin: 0;
-  padding: 0;
-
-  span {
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: #007bff;
-    }
-  }
-`;
-
-const StyledButton = styled.button`
-  font-size: 1.5rem;
-  padding: 15px 30px;
-  margin-top: 40px;
-  cursor: pointer;
-  border: none;
-  border-radius: 20px;
-  background-color: #007bff;
-  color: white;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #0056b3;
-		color: #ffc52d;
-  }
-`;
-
-// Styled component for the About section
-const AboutSection = styled.div`
-  font-size: 2rem;
-  text-align: left;
-  padding: 50px 20px;
-	padding-left: 100px;
-`;
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: inherit;
-
-  &:hover {
-    text-decoration: none;
-    color: inherit;
-  }
-`;
-
+import './home.css'; // Make sure your CSS file is imported
 
 const Home = () => {
   const { user } = useAuthContext();
   return (
     <div>
-      <MainContainer>
-        <img src={logo} alt="BruinsOnBoard Logo" width="100" height="auto"/> {/* Adjust width as needed */}
-        <WelcomeText>Welcome to <span>BruinsOnBoard</span></WelcomeText>
-        <StyledLink to={user ? '/rides' : '/signup'}>
-          <StyledButton>Get Started</StyledButton>
-        </StyledLink>
-      </MainContainer>
-      <AboutSection>
-        <h1>About</h1>
-        <p>We are a dedicated team of UCLA students who are looking to improve tranpsortation for UCLA studnets.</p>
-      </AboutSection>
+      <div className="main-container">
+        <h1 className="welcome-text">Welcome to <span>BruinsOnBoard</span></h1>
+        <p>find other UCLA students to share an Uber ride with!</p>
+        <Link to={user ? '/rides' : '/signup'}>
+          <button className="styled-button">Get Started</button>
+        </Link>
+      </div>
+      <div className="about-section">
+      </div>
     </div>
   );
 };

@@ -14,7 +14,7 @@ import SignUp from "./pages/profile/signup";
 import Messages from "./pages/messages/message";
 import RidesFind from "./pages/rides/rides";
 import Profile from "./pages/profile/profile"
-
+import About from "./pages/about/about";
 
 function App() {
   const { user } = useAuthContext();
@@ -28,6 +28,7 @@ function App() {
         <Route path="/message" element={<Messages />} />
         <Route path="/rides" element={user ? <RidesFind /> : <Navigate to='/login' />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </Router>
   );
