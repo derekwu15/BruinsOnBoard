@@ -34,8 +34,7 @@ const EventCalendar = () => {
 
       const formattedData = data.map(eventData => {
         const eventDate = moment(eventData.date + ' ' + eventData.time, 'MMMM DD, YYYY h:mm A').toDate();
-        const eventDuration = 30 * 60 * 1000; // 30 minutes in milliseconds
-
+        const eventDuration = 30 * 60 * 1000;
         return {
           id: eventData._id,
           title: `${eventData.from.toUpperCase()} TO ${eventData.to.toUpperCase()}`,
@@ -48,7 +47,6 @@ const EventCalendar = () => {
         };
       });
 
-      // console.log('Formatted Data:', formattedData); // Log the formatted data
       setEvents(formattedData);
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -62,7 +60,7 @@ const EventCalendar = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, title, start, end, displayName }), // Pass the recipient email address to the backend
+        body: JSON.stringify({ email, title, start, end, displayName }),
       });
 
       if (!response.ok) {
@@ -70,7 +68,7 @@ const EventCalendar = () => {
       }
 
       const data = await response.json();
-      console.log(data); // Log response from the backend
+      console.log(data);
     } catch (error) {
       console.error('Error sending email:', error);
     }
@@ -101,7 +99,6 @@ const EventCalendar = () => {
 
     const memberEmails = [];
     try {
-      // Fetch user data for each member ID
       const userString = localStorage.getItem('user');
       const user = JSON.parse(userString);
       const token = user.token
@@ -140,9 +137,7 @@ const EventCalendar = () => {
 
         sendEmail(email, event.title, event.start, event.end, displayName)
       }
-      // Redirect or show success message as needed
     } catch (error) {
-      //this.setState({ error: "Failed to create ride" });
       console.error("Invalid", error);
     }
 
@@ -220,9 +215,7 @@ const EventCalendar = () => {
 
       console.log("Ride created successfully");
       fetchData()
-      // Redirect or show success message as needed
     } catch (error) {
-      //this.setState({ error: "Failed to create ride" });
       console.error("Invalid", error);
     }
   }
@@ -246,8 +239,7 @@ const EventCalendar = () => {
 
         const formattedData = data.map(eventData => {
           const eventDate = moment(eventData.date + ' ' + eventData.time, 'MMMM DD, YYYY h:mm A').toDate();
-          const eventDuration = 30 * 60 * 1000; // 30 minutes in milliseconds
-
+          const eventDuration = 30 * 60 * 1000;
           return {
             id: eventData._id,
             title: `${eventData.from.toUpperCase()} TO ${eventData.to.toUpperCase()}`,
@@ -260,7 +252,6 @@ const EventCalendar = () => {
           };
         });
 
-        // console.log('Formatted Data:', formattedData); // Log the formatted data
         setEvents(formattedData);
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -287,7 +278,6 @@ const EventCalendar = () => {
           }
 
           const memberData = await response.json();
-          // console.log(memberData)
           setMember(memberData);
         } catch (error) {
           console.error('Error fetching member data:', error);

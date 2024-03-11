@@ -1,85 +1,7 @@
-// Filename - pages/profile/login.js
-
 import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { useLogin } from '../../hooks/useLogin'
+import { AuthContainer, AuthBox, AuthHeader, AuthForm, AuthLabel, AuthInput, AuthSubmitButton, AuthLink } from './styledAuth';
 import { useState } from 'react';
-
-const LoginContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh; /* Adjusted height */
-`;
-
-const LoginBox = styled.div`
-  max-width: 400px;
-  width: 100%;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-`;
-
-const LoginHeader = styled.h1`
-  font-size: 24px;
-  text-align: center;
-  color: #333;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Label = styled.label`
-  width: 100%;
-  margin-bottom: 10px;
-  color: #555;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  box-sizing: border-box; /* Ensures padding and border are included in the total width */
-`;
-
-const SubmitButton = styled.input`
-  width: 100%;
-  background-color: #0172c0;
-  color: #fff;
-  padding: 12px;
-  font-size: 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #01508b;
-  }
-`;
-
-const SignUpLink = styled.p`
-  text-align: center;
-  margin-top: 15px;
-  color: #555;
-
-  a {
-    color: #0172c0;
-    text-decoration: underline;
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: #01508b;
-    }
-  }
-`;
+import { useLogin } from '../../hooks/useLogin';
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -92,32 +14,32 @@ const Login = () => {
   }
 
   return (
-    <LoginContainer>
-      <LoginBox>
-        <LoginHeader>Login</LoginHeader>
-        <Form onSubmit={handleSubmit} method="POST">
-          <Label>
+    <AuthContainer>
+      <AuthBox>
+        <AuthHeader>Login</AuthHeader>
+        <AuthForm onSubmit={handleSubmit} method="POST">
+          <AuthLabel>
             Email:{' '}
-            <Input type="email" name="Email" required
+            <AuthInput type="email" name="Email" required
               className="form-control"
               value={email}
               onChange={(e) => setEmail(e.target.value)} />
-          </Label>
-          <Label>
+          </AuthLabel>
+          <AuthLabel>
             Password:{' '}
-            <Input type="password" name="Password" required
+            <AuthInput type="password" name="Password" required
               className="form-control"
               value={password}
               onChange={(e) => setPassword(e.target.value)} />
-          </Label>
-          <SubmitButton disabled={isLoading} type="submit" value="Submit" />
+          </AuthLabel>
+          <AuthSubmitButton disabled={isLoading} type="submit" value="Submit" />
           {error && <div className="error">{error}</div>}
-        </Form>
-        <SignUpLink>
+        </AuthForm>
+        <AuthLink>
           Don't have an account? <Link to="/signup">Sign Up</Link>
-        </SignUpLink>
-      </LoginBox>
-    </LoginContainer>
+        </AuthLink>
+      </AuthBox>
+    </AuthContainer>
   )
 }
 export default Login

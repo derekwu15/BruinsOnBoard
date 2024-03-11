@@ -1,41 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
+import { AboutContainer, Heading, SubHeading, Paragraph, List, ListItem, BoldText } from './styledAbout';
 
-// Styled components
-const AboutContainer = styled.div`
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-  font-size: 18px;
-`;
-
-const Heading = styled.h1`
-  color: #031d39;
-  text-align: center;
-`;
-
-const SubHeading = styled.h2`
-  color: #8093b7;
-`;
-
-const Paragraph = styled.p`
-  text-align: justify;
-  line-height: 1.6;
-`;
-
-const List = styled.ul`
-  list-style-position: inside;
-`;
-
-const ListItem = styled.li`
-  margin-bottom: 10px;
-`;
-
-const BoldText = styled.span`
-  font-weight: bold;
-`;
-
-// AboutPage component
 const AboutPage = () => {
   return (
     <AboutContainer>
