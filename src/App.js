@@ -14,6 +14,8 @@ import SignUp from "./pages/profile/signup";
 import Messages from "./pages/messages/message";
 import RidesFind from "./pages/rides/rides";
 import Profile from "./pages/profile/profile"
+import ViewProfiles from "./pages/profile/viewProfile"
+
 import About from "./pages/about/about";
 
 function App() {
@@ -26,8 +28,9 @@ function App() {
         <Route path="/login" element={!user ? <Login /> : <Navigate to='/' />} />
         <Route path="/signup" element={!user ? <SignUp /> : <Navigate to='/' />} />
         <Route path="/message" element={<Messages />} />
-        <Route path="/rides" element={user ? <RidesFind /> : <Navigate to='/login' />} />
+        <Route path="/rides" element={<RidesFind />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/viewprofile" element={<ViewProfiles />} />
         <Route path="/about" element={<About />} />
       </Routes>
     </Router>

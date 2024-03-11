@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { Container, ProfileCard, ProfileImage, UserInfo} from './styledProfiles';
 import {jwtDecode} from 'jwt-decode';
-import { Container, ProfileCard, ProfileImage, UserInfo, EditForm, Input, Textarea } from './styledProfiles';
+import React, { useState, useEffect } from 'react';
 
-const ProfilePage = () => {
+const ViewProfiles = () => {
 
   const [member, setMember] = useState(null);
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [bio, setBio] = useState('');
   useEffect(() => {
     const fetchMemberData = async () => {
       const userString = localStorage.getItem('user');
@@ -53,34 +50,6 @@ const ProfilePage = () => {
     fetchMemberData();
   }, []);
 
-  const handleSave = async () => {
-    const userString = localStorage.getItem('user');
-    const user = JSON.parse(userString);
-    const token = user.token
-    const userId = jwtDecode(token);
-    const profileData = { name, username, bio, uid: userId._id };
-
-    try {
-      const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(profileData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save profile');
-      }
-
-      // Optionally, handle success response
-      console.log('Profile saved successfully');
-      window.location = '/profile';
-    } catch (error) {
-      console.error('Error saving profile:', error.message);
-    }
-  }
   return (
     <Container>
       <ProfileCard>
@@ -101,25 +70,8 @@ const ProfilePage = () => {
         )}
         </UserInfo>
       </ProfileCard>
-      <EditForm>
-        <h2>Edit Profile</h2>
-        <label>
-          Name:
-          <Input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)}/>
-        </label>
-        <label>
-          Username:
-          <Input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)}/>
-        </label>
-        <label>
-          Bio:
-          <Textarea placeholder="Enter your bio" rows="4" value={bio} onChange={(e) => setBio(e.target.value)}></Textarea>
-        </label>
-        <br/>
-        <button onClick={handleSave}>Save</button>
-      </EditForm>
     </Container>
   );
 };
 
-export default ProfilePage;
+export default ViewProfiles;
