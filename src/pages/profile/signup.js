@@ -83,7 +83,7 @@ const Signup = () => {
           <SignUpForm onSubmit={handleSubmit} method= "POST">
             <SignUpLabel>
               Email:{' '}
-              <SignUpInput type="text"
+              <SignUpInput type="email"
               required
               className="form-control"
               value={email}
@@ -92,7 +92,7 @@ const Signup = () => {
             </SignUpLabel>
             <SignUpLabel>
               Password:{' '}
-              <SignUpInput type="text"
+              <SignUpInput type="password"
               required
               className="form-control"
               value={password}
