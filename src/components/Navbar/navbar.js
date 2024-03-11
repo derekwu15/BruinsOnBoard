@@ -71,11 +71,11 @@ const DropdownMenu = styled.div`
   position: absolute;
   background-color: #f9f9f9;
   background: #0172c0;
-
   min-width: 160px;
   padding: 12px 16px;
   z-index: 1;
   right: 0;
+  top: 40px;
 `;
 
 const ProfileButton = styled.div`
@@ -118,6 +118,26 @@ const DropdownLink = styled(Link)`
   }
 `;
 
+const SearchBar = styled.input`
+  padding: 10px;
+  margin-right: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 15px;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  justify-content: end;
+  align-items: center;
+`;
+
 const Navbar = () => {
   const {logout} = useLogout()
   const { user } = useAuthContext()
@@ -127,6 +147,21 @@ const Navbar = () => {
     setDropdown(!dropdown);
   };
 
+  const [searchInput, setSearchInput] = useState("");
+
+  const handleSearchChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const handleSearchKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      // Implement your search logic here, e.g., navigate to search page or filter content
+      console.log(searchInput); // For example, log the search input
+      // You might want to navigate to a search page or perform any other action
+    }
+  };
+
+
   return (
     <>
       <Nav>
@@ -134,29 +169,43 @@ const Navbar = () => {
           <NavLink to="/" activeStyle>
             Home
           </NavLink>
-          <NavLink to="/rides" activeStyle>
-            Rides
-          </NavLink>
+
+          {user && (
+            <NavLink to="/rides" activeStyle>
+              Rides
+            </NavLink>
+          )}
+
         </NavMenu>
         {user && (
-          <ProfileButton onClick={toggleDropdown}>
-            Profile
-            <DropdownMenu>
-              <DropdownLink to="/profile" activeStyle>
-                Your Profile
-              </DropdownLink>
-              <DropdownLink as="LogoutButton" onClick={() => logout()} activeStyle>
-                Log out
-              </DropdownLink> 
-            </DropdownMenu>
-          </ProfileButton>
+          <SearchContainer>
+            <SearchBar
+              type="text"
+              placeholder="Search Profile"
+              value={searchInput}
+              onChange={handleSearchChange}
+              onKeyPress={handleSearchKeyPress}
+            />
+            <ProfileButton onClick={toggleDropdown}>
+              Profile
+              <DropdownMenu>
+                <DropdownLink to="/profile" activeStyle>
+                  Your Profile
+                </DropdownLink>
+                <DropdownLink as="LogoutButton" onClick={() => logout()} activeStyle>
+                  Log out
+                </DropdownLink> 
+              </DropdownMenu>
+            </ProfileButton>
+          </SearchContainer>
         )}
 
-        {!user && (
-          <LoginButton to="/login" activeStyle>
-            Login
-          </LoginButton>
-        )}
+          {!user && (
+            <LoginButton to="/login" activeStyle>
+              Login
+            </LoginButton>
+          )}
+        
       </Nav>
     </>
   );
