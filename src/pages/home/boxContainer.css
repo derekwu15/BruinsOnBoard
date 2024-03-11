@@ -1,0 +1,45 @@
+/* BoxContainer.css */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+.box-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 50px;
+  }
+  
+  .box {
+    width: 200px; /* Adjust the width as needed */
+    height: 600px;
+    text-align: center; /* Centers the content */
+    margin: 10px; /* Adds space between the boxes */
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .box img {
+    width: 100%; /* Makes the image fill the container */
+    height: auto; /* Keeps the image aspect ratio */
+    border-radius: 5px; /* Optional: rounds the corners of the image */
+  }
+  
+  .box button {
+    width: 100%;
+    padding: 10px; /* Adds padding inside the button */
+    margin-top: 10px; /* Adds space between the image and the button */
+    cursor: pointer; /* Changes the cursor to signify it's clickable */
+    border: none; /* Removes the border */
+    border-radius: 5px; /* Rounds the corners of the button */
+    background-color: #031d39; /* Example button color, you can change this */
+    color: white; /* Text color */
+    font-size: 16px; /* Adjust the font size as needed */
+    font-family: 'Outfit';
+  }
+  
+  .box button:hover {
+    background-color: #0056b3; /* Darkens the button on hover for feedback */
+  }
+  
