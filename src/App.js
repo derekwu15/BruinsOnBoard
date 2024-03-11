@@ -14,6 +14,7 @@ import SignUp from "./pages/profile/signup";
 import Messages from "./pages/messages/message";
 import RidesFind from "./pages/rides/rides";
 import Profile from "./pages/profile/profile"
+import ViewProfiles from "./pages/profile/viewProfile"
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/message" element={<Messages />} />
         <Route path="/rides" element={user ? <RidesFind /> : <Navigate to='/login' />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/viewprofile" element={<ViewProfiles />} />
       </Routes>
     </Router>
   );
