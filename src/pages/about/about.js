@@ -10,12 +10,12 @@ const AboutContainer = styled.div`
 `;
 
 const Heading = styled.h1`
-  color: #0056b3;
+  color: #031d39;
   text-align: center;
 `;
 
 const SubHeading = styled.h2`
-  color: #007bff;
+  color: #8093b7;
 `;
 
 const Paragraph = styled.p`
@@ -39,7 +39,7 @@ const BoldText = styled.span`
 const AboutPage = () => {
   return (
     <AboutContainer>
-      <Heading>About BruinsOnBoard</Heading>
+      <Heading>About Us</Heading>
       <SubHeading>Sharing Journeys, Splitting Costs, Building Connections</SubHeading>
       <Paragraph>
         At BruinsOnBoard, we believe that getting from point A to point B should be more than just a ride—it should be a journey shared with peers, an opportunity to make new friends, and a way to make travel more affordable. We are a community-focused rideshare solution exclusively for UCLA students, designed to connect Bruins so they can share an Uber ride and split the costs.
