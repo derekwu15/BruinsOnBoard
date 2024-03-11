@@ -178,15 +178,6 @@ const Navbar = () => {
             </NavLink>
           )}
 
-          <NavLink to="/rides" activeStyle>
-            Rides
-          </NavLink>
-          <NavLink to="/profile" activeStyle>
-            Profile
-          </NavLink>
-          <NavLink to="/profile" activeStyle>
-            About Us
-          </NavLink>
         </NavMenu>
         {user && (
           <SearchContainer>
@@ -203,7 +194,7 @@ const Navbar = () => {
                 <DropdownLink to="/profile" activeStyle>
                   Your Profile
                 </DropdownLink>
-                <DropdownLink as="LogoutButton" onClick={() => logout()} activeStyle>
+                <DropdownLink as="LogoutButton" onClick={() => logout()}activeStyle>
                   Log out
                 </DropdownLink> 
               </DropdownMenu>
