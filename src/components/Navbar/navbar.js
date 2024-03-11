@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { NavLink as Link } from "react-router-dom";
 import {useLogout} from '../../hooks/useLogout'
 import { useAuthContext } from "../../hooks/useAuthContext";
+import logo from '../../logo.png';
 
 const Nav = styled.nav`
   background: #0172c0;
@@ -98,11 +99,15 @@ const Navbar = () => {
     <>
       <Nav>
         <NavMenu>
+          <img src={logo} alt="Logo" width="55" height="55"/>
           <NavLink to="/" activeStyle>
             Home
           </NavLink>
           <NavLink to="/rides" activeStyle>
             Rides
+          </NavLink>
+          <NavLink to="/profile" activeStyle>
+            Profile
           </NavLink>
         </NavMenu>
         {user && (

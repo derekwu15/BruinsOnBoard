@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import {Navigate} from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import './home.css';
+import logo from '../../logo.png';
 
 // Styled component for the main container
 const MainContainer = styled.div`
@@ -71,6 +73,7 @@ const Home = () => {
   return (
     <div>
       <MainContainer>
+        <img src={logo} alt="BruinsOnBoard Logo" width="100" height="auto"/> {/* Adjust width as needed */}
         <WelcomeText>Welcome to <span>BruinsOnBoard</span></WelcomeText>
         <StyledLink to={user ? '/rides' : '/signup'}>
           <StyledButton>Get Started</StyledButton>
