@@ -2,10 +2,9 @@ const Member = require('../models/memberModel')
 const mongoose = require('mongoose')
 
 const getMembers = async (req, res) => {
-    const user_id = req.user._id
 
-    const members = await Member.find({user_id}).sort({createdAt: -1})
-    
+    const members = await Member.find({}).sort({createdAt: -1})
+
     res.status(200).json(members)
 }
 
@@ -94,37 +93,11 @@ const updateMember = async (req, res) => {
     res.status(200).json(member)
 }
 
-const search = async (req, res) => {
-  const { keyword } = req.query;
-
-  try {
-    let members;
-    if (keyword) {
-      members = await Member.find({
-        $or: [
-          { name: { $regex: keyword, $options: 'i' } }, // Match name case-insensitively
-          { username: { $regex: keyword, $options: 'i' } }, // Match username case-insensitively
-          // Add more fields as needed
-        ]
-      });
-    } else {
-      members = await Member.find();
-    }
-
-    res.status(200).json(members);
-  } catch (error) {
-    console.error('Error fetching profiles:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
-
-
 
 module.exports = {
     getMember,
     getMembers,
     createMember,
     deleteMember,
-    updateMember,
-    search
+    updateMember
   }

@@ -4,7 +4,7 @@ const {
     getMember,
     deleteMember,
     updateMember,
-    search
+    getMembers
 } = require('../controllers/memberController')
 const requireAuth = require('../middleware/requireAuth')
 
@@ -20,6 +20,6 @@ router.delete('/:id', deleteMember)
 
 router.patch('/:id', updateMember)
 
-router.post('/search', search)
+router.get('/', getMembers)
 
 module.exports = router
