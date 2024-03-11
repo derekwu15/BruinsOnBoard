@@ -6,7 +6,7 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import logo from '../../logo.png';
 
 const Nav = styled.nav`
-  background: #0172c0;
+  background: #031d39;
   height: 60px;
   display: flex;
   justify-content: space-between;
@@ -108,6 +108,9 @@ const Navbar = () => {
           </NavLink>
           <NavLink to="/profile" activeStyle>
             Profile
+          </NavLink>
+          <NavLink to="/profile" activeStyle>
+            About Us
           </NavLink>
         </NavMenu>
         {user && (
