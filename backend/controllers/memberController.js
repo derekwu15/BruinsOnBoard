@@ -81,12 +81,9 @@ const deleteMember = async (req, res) => {
 
 const updateMember = async (req, res) => {
     const { id } = req.params
+    console.log(id)
   
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({error: 'No such member'})
-    }
-  
-    const member = await Member.findOneAndUpdate({_id: id}, {
+    const member = await Member.findOneAndUpdate({user_id: id}, {
       ...req.body
     })
   
