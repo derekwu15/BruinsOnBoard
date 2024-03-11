@@ -45,10 +45,10 @@ mongoose.connect(uri)
 
 // Send email
 app.post('/api/sendEmail', async (req, res) => {
-  const { email } = req.body;
+  const { email, title, start, end, displayName} = req.body;
 
   try {
-    await sendEmail({ email }); // Call the sendEmail function with the recipient email address
+    await sendEmail({ email, title, start, end, displayName }); // Call the sendEmail function with the recipient email address
     res.status(200).json({ message: 'Email sent successfully' });
   } catch (error) {
     console.error('Error sending email:', error);
