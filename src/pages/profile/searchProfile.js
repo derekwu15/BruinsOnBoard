@@ -1,41 +1,18 @@
 import { Container, ProfileCard, ProfileImage, UserInfo } from './styledProfiles';
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from "../../hooks/useAuthContext";
-
 
 const MemberSearch = () => {
   const navigate = useNavigate();
-  const { user } = useAuthContext();
   const [members, setMembers] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [filteredMembers, setFilteredMembers] = useState([]);
 
 
-  useEffect(() => {
-
-    const fetchMemberData = async () => {
-      const userString = localStorage.getItem('user');
-      const user = JSON.parse(userString);
-      const token = user.token
-      if (token) {
-        try {
-          const response = await fetch('http://localhost:4000/api/members/', {
-            headers: {
-              'Authorization': 'Bearer ' + token
-            }
-          });
-          if (!response.ok) {
-            throw new Error('Failed to fetch member data');
-          }
-
-          const memberData = await response.json();
-          setMembers(memberData);
-        } catch (error) {
-          console.error('Error fetching member data:', error);
-        }
-      }
-    }
+useEffect(() => {
+  const fetchData = async () => {
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
 
     if (!user) {
       console.error('JWT token not found in local storage');
@@ -43,8 +20,32 @@ const MemberSearch = () => {
       return;
     }
 
-    fetchMemberData();
-  }, [navigate, user]);
+    const token = user.token;
+
+    if (token) {
+      try {
+        const response = await fetch('http://localhost:4000/api/members/', {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch member data');
+        }
+
+        const memberData = await response.json();
+        setMembers(memberData);
+      } catch (error) {
+        console.error('Error fetching member data:', error);
+      }
+    } else {
+      console.error('JWT token not found in local storage');
+    }
+  };
+
+  fetchData();
+}, [navigate]);
 
   useEffect(() => {
     // Filter members based on search input
