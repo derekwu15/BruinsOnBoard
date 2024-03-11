@@ -167,6 +167,36 @@ const EventCalendar = () => {
     setShowEvent(true);
   };
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:4000/api/rides');
+      const data = await response.json();
+
+
+
+      const formattedData = data.map(eventData => {
+        const eventDate = moment(eventData.date + ' ' + eventData.time, 'MMMM DD, YYYY h:mm A').toDate();
+        const eventDuration = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+        return {
+          id: eventData._id,
+          title: `${eventData.from.toUpperCase()} TO ${eventData.to.toUpperCase()}`,
+          start: eventDate,
+          end: new Date(eventDate.getTime() + eventDuration),
+
+          capacity: eventData.capacity,
+          members: eventData.members,
+
+        };
+      });
+
+      console.log('Formatted Data:', formattedData); // Log the formatted data
+      setEvents(formattedData);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
+
   const handleJoin = async(event_id, capacity, members) => {
 
     
@@ -199,6 +229,7 @@ const EventCalendar = () => {
       console.error("Invalid", error);
     }
 
+    fetchData()
 
   }
 
@@ -209,7 +240,7 @@ const EventCalendar = () => {
       <PopupLabel>{event.title}</PopupLabel>
       <PopupSubLabel>{moment(event.start).format('MMMM D, YYYY')}</PopupSubLabel>
       <PopupSubLabel>{moment(event.start).format('h:mm A')} - {moment(event.end).format('h:mm A')}</PopupSubLabel>
-      <PopupSubLabel>capacity: {event.capacity}</PopupSubLabel>
+      <PopupSubLabel>capacity: {event.capacity} spots left</PopupSubLabel>
       <PopupSubLabel>members: {event.members.join(', ')}</PopupSubLabel>
       {/* <PopupLabel>ID = {event.id}</PopupLabel> */}
       <ButtonsContainer>
