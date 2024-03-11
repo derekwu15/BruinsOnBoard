@@ -15,86 +15,114 @@ const ProfilePage = () => {
   const [bio, setBio] = useState('');
 
   useEffect(() => {
+  const fetchData = async () => {
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
 
     if (!user) {
       console.error('JWT token not found in local storage');
       navigate('/login');
       return;
     }
-    const fetchMemberData = async () => {
-      const userString = localStorage.getItem('user');
-      const user = JSON.parse(userString);
-      const token = user.token
-      if (token) {
-        try {
-          const userId = jwtDecode(token);
-          const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
-            headers: {
-              'Authorization': 'Bearer ' + token
-            }
-          });
-          if (!response.ok) {
-            throw new Error('Failed to fetch member data');
-          }
 
-          const memberData = await response.json();
-          setMember(memberData);
-        } catch (error) {
-          console.error('Error fetching member data:', error);
+    const token = user.token;
+
+    if (token) {
+      try {
+        const userId = jwtDecode(token);
+
+        const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch member data');
         }
 
-        try {
-          const userId = jwtDecode(token);
-          const response = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
-            headers: {
-              'Authorization': 'Bearer ' + token
-            }
-          });
-          if (!response.ok) {
-            throw new Error('Failed to fetch member data');
-          }
+        const memberData = await response.json();
+        setMember(memberData);
 
-          const profileData = await response.json();
-          setEmail(profileData.email);
-        } catch (error) {
-          console.error('Error fetching email:', error);
+        const profileResponse = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        });
+
+        if (!profileResponse.ok) {
+          throw new Error('Failed to fetch profile data');
         }
-      } else {
-        console.error('JWT token not found in local storage');
+
+        const profileData = await profileResponse.json();
+        setEmail(profileData.email);
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-    };
-    fetchMemberData();
-  }, []);
+    } else {
+      console.error('JWT token not found in local storage');
+    }
+  };
+
+  fetchData();
+}, [navigate]);
 
   const handleSave = async () => {
-    const userString = localStorage.getItem('user');
-    const user = JSON.parse(userString);
-    const token = user.token
-    const userId = jwtDecode(token);
-    const profileData = { name, username, bio, uid: userId._id };
+  const userString = localStorage.getItem('user');
+  const user = JSON.parse(userString);
+  const token = user.token;
+  const userId = jwtDecode(token);
+  const profileData = { name, username, bio, uid: userId._id };
 
-    try {
-      const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(profileData)
-      });
+  try {
+    const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(profileData)
+    });
 
-      if (!response.ok) {
-        throw new Error('Failed to save profile');
-      }
-
-      // Optionally, handle success response
-      console.log('Profile saved successfully');
-      window.location = '/profile';
-    } catch (error) {
-      console.error('Error saving profile:', error.message);
+    if (!response.ok) {
+      throw new Error('Failed to save profile');
     }
+
+    // Fetch the updated member and profile data
+    const updatedMemberResponse = await fetch('http://localhost:4000/api/members/' + userId._id, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    });
+
+    if (!updatedMemberResponse.ok) {
+      throw new Error('Failed to fetch updated member data');
+    }
+
+    const updatedMemberData = await updatedMemberResponse.json();
+    setMember(updatedMemberData);
+
+    const updatedProfileResponse = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    });
+
+    if (!updatedProfileResponse.ok) {
+      throw new Error('Failed to fetch updated profile data');
+    }
+
+    const updatedProfileData = await updatedProfileResponse.json();
+    setEmail(updatedProfileData.email);
+
+    // Optionally, handle success response
+    console.log('Profile saved successfully');
+    navigate('/profile', { replace: true }); // Navigate to /profile and replace the current history entry
+  } catch (error) {
+    console.error('Error saving profile:', error.message);
   }
-  return (
+}
+    return (
     <Container>
       <ProfileCard>
         <ProfileImage

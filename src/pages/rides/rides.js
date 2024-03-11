@@ -6,7 +6,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { jwtDecode } from 'jwt-decode';
 import { Container, EventContainer, EventAlignContainer, Title, Label, PopupLabel, PopupSubLabel, StyledSelect, DatePickerStyled, Button, EventPopupButton, ButtonsContainer, CenterContainer, TitleContainer } from './styledRides';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from "../../hooks/useAuthContext";
 
 const localizer = momentLocalizer(moment);
 
@@ -22,8 +21,6 @@ const EventCalendar = () => {
     setShowEvent(true);
   };
   const navigate = useNavigate();
-  const { user } = useAuthContext();
-
 
   const fetchData = async () => {
     try {
@@ -222,7 +219,10 @@ const EventCalendar = () => {
 
   const [events, setEvents] = useState([]);
 
-  useEffect(() => {
+ useEffect(() => {
+  const fetchData = async () => {
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
 
     if (!user) {
       console.error('JWT token not found in local storage');
@@ -230,41 +230,31 @@ const EventCalendar = () => {
       return;
     }
 
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:4000/api/rides');
-        const data = await response.json();
+    try {
+      const response = await fetch('http://localhost:4000/api/rides');
+      const data = await response.json();
 
+      const formattedData = data.map(eventData => {
+        const eventDate = moment(eventData.date + ' ' + eventData.time, 'MMMM DD, YYYY h:mm A').toDate();
+        const eventDuration = 30 * 60 * 1000;
+        return {
+          id: eventData._id,
+          title: `${eventData.from.toUpperCase()} TO ${eventData.to.toUpperCase()}`,
+          start: eventDate,
+          end: new Date(eventDate.getTime() + eventDuration),
+          capacity: eventData.capacity,
+          members: eventData.members,
+        };
+      });
 
-
-        const formattedData = data.map(eventData => {
-          const eventDate = moment(eventData.date + ' ' + eventData.time, 'MMMM DD, YYYY h:mm A').toDate();
-          const eventDuration = 30 * 60 * 1000;
-          return {
-            id: eventData._id,
-            title: `${eventData.from.toUpperCase()} TO ${eventData.to.toUpperCase()}`,
-            start: eventDate,
-            end: new Date(eventDate.getTime() + eventDuration),
-
-            capacity: eventData.capacity,
-            members: eventData.members,
-
-          };
-        });
-
-        setEvents(formattedData);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
-
-    fetchData();
-
+      setEvents(formattedData);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
 
     const fetchMemberData = async () => {
-      const userString = localStorage.getItem('user');
-      const user = JSON.parse(userString);
-      const token = user.token
+      const user = userString ? JSON.parse(userString) : null;
+      const token = user.token;
       if (token) {
         try {
           const userId = jwtDecode(token);
@@ -288,7 +278,10 @@ const EventCalendar = () => {
     };
 
     fetchMemberData();
-  }, []);
+  };
+
+  fetchData();
+}, [navigate]);
 
   return (
     <div style={{ display: 'flex', height: 600 }}>

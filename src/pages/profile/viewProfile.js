@@ -16,60 +16,51 @@ const ViewProfiles = () => {
   const [email, setEmail] = useState('');
 
   useEffect(() => {
-    if (!user) {
-      console.error('JWT token not found in local storage');
-      navigate('/login');
-      return;
-    }
+  const userString = localStorage.getItem('user');
+  const user = userString ? JSON.parse(userString) : null;
 
+  if (!user) {
+    console.error('JWT token not found in local storage');
+    navigate('/login');
+    return;
+  }
 
-    const fetchMemberData = async () => {
-      const userString = localStorage.getItem('user');
-      const user = userString ? JSON.parse(userString) : null;
+  const token = user?.token;
 
-      const token = user?.token;
-
-      if (token) {
-        try {
-          const response = await fetch(`http://localhost:4000/api/members/${userId}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to fetch member data');
-          }
-
-          const memberData = await response.json();
-          setMember(memberData);
-        } catch (error) {
-          console.error('Error fetching member data:', error);
+  const fetchData = async () => {
+    try {
+      const memberResponse = await fetch(`http://localhost:4000/api/members/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
+      });
 
-        try {
-          const response = await fetch(`http://localhost:4000/api/profiles/${userId}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to fetch profile data');
-          }
-
-          const profileData = await response.json();
-          setEmail(profileData.email);
-        } catch (error) {
-          console.error('Error fetching email:', error);
-        }
-      } else {
-        console.error('JWT token not found in local storage');
+      if (!memberResponse.ok) {
+        throw new Error('Failed to fetch member data');
       }
-    };
 
-    fetchMemberData();
-  }, [userId]);
+      const memberData = await memberResponse.json();
+      setMember(memberData);
+
+      const profileResponse = await fetch(`http://localhost:4000/api/profiles/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!profileResponse.ok) {
+        throw new Error('Failed to fetch profile data');
+      }
+
+      const profileData = await profileResponse.json();
+      setEmail(profileData.email);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [userId, navigate]);
 
   return (
     <Container>
