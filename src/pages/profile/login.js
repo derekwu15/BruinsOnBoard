@@ -81,27 +81,6 @@ const SignUpLink = styled.p`
   }
 `;
 
-const sendEmail = async (email) => {
-  try {
-    const response = await fetch('http://localhost:4000/api/sendEmail', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }), // Pass the recipient email address to the backend
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to send email');
-    }
-
-    const data = await response.json();
-    console.log(data); // Log response from the backend
-  } catch (error) {
-    console.error('Error sending email:', error);
-  }
-};
-
 const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -110,7 +89,6 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     await login(email, password)
-    sendEmail(email)
   }
 
   return (

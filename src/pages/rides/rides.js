@@ -14,7 +14,7 @@ const EventCalendar = () => {
   const [showEvent, setShowEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null); 
   const [member, setMember] = useState(null);
-
+  const displayName = []
   const handleEventClick = (event) => {
     setSelectedEvent(event);
     setShowEvent(true);
@@ -43,32 +43,85 @@ const EventCalendar = () => {
         };
       });
 
-      console.log('Formatted Data:', formattedData); // Log the formatted data
+      // console.log('Formatted Data:', formattedData); // Log the formatted data
       setEvents(formattedData);
     } catch (error) {
       console.error('Error fetching events:', error);
     }
   };
 
-  const handleJoin = async(event_id, capacity, members) => {
-
-    
-    console.log(member.name)
-
-    console.log(event_id)
-    
-    members.push(member.name)
+  const sendEmail = async (email, title, start,end, displayName) => {
+    try {
+      const response = await fetch('http://localhost:4000/api/sendEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email,title, start, end, displayName }), // Pass the recipient email address to the backend
+      });
   
-    capacity -= 1 
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+  
+      const data = await response.json();
+      console.log(data); // Log response from the backend
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  };
 
+  const handleJoin = async(event) => {
+    
+    const memb = event.members.push(member.user_id)
+  
+    const cap = event.capacity -= 1 
+    try{
+      const userString = localStorage.getItem('user');
+      const user = JSON.parse(userString);
+      const token = user.token
+      const response = await fetch('http://localhost:4000/api/members/' + member.user_id, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+      }});
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile data for ID: ' + member.user_id);
+      }
+      const memberData = await response.json();
+      displayName.push(memberData.name);
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+
+    const memberEmails = [];
+    try {
+      // Fetch user data for each member ID
+      const userString = localStorage.getItem('user');
+      const user = JSON.parse(userString);
+      const token = user.token
+
+      for (const uid of event.members) {
+        const response = await fetch('http://localhost:4000/api/profiles/' + uid, {
+          headers: {
+            'Authorization': 'Bearer ' + token
+        }});
+        if (!response.ok) {
+          throw new Error('Failed to fetch profile data for ID: ' + uid);
+        }
+        const memberData = await response.json();
+        memberEmails.push(memberData.email);
+      }
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
 
     try {
-      const response = await fetch("http://localhost:4000/api/rides/" + event_id, {
+      const response = await fetch("http://localhost:4000/api/rides/" + event.id, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({members, capacity})
+        body: JSON.stringify({memb, cap})
       });
 
       if (!response.ok) {
@@ -76,7 +129,10 @@ const EventCalendar = () => {
       }
 
       console.log("Ride Patched successfully");
-      fetchData()
+      for (const email of memberEmails){
+
+        sendEmail(email, event.title, event.start, event.end, displayName)
+      }
       // Redirect or show success message as needed
     } catch (error) {
       //this.setState({ error: "Failed to create ride" });
@@ -95,9 +151,9 @@ const EventCalendar = () => {
       <PopupSubLabel>{moment(event.start).format('MMMM D, YYYY')}</PopupSubLabel>
       <PopupSubLabel>{moment(event.start).format('h:mm A')} - {moment(event.end).format('h:mm A')}</PopupSubLabel>
       <PopupSubLabel>capacity: {event.capacity} spots left</PopupSubLabel>
-      <PopupSubLabel>members: {event.members.join(', ')}</PopupSubLabel>
+      <PopupSubLabel>members: {displayName.join(', ')}</PopupSubLabel>
       <ButtonsContainer>
-        <EventPopupButton onClick={() => handleJoin(event.id, event.capacity, event.members)}>JOIN</EventPopupButton>
+        <EventPopupButton onClick={() => handleJoin(event)}>JOIN</EventPopupButton>
         <EventPopupButton onClick={onClose}>CLOSE</EventPopupButton>
       </ButtonsContainer>
     </EventAlignContainer>
@@ -190,7 +246,7 @@ const EventCalendar = () => {
           };
         });
 
-        console.log('Formatted Data:', formattedData); // Log the formatted data
+        // console.log('Formatted Data:', formattedData); // Log the formatted data
         setEvents(formattedData);
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -216,7 +272,7 @@ const EventCalendar = () => {
           }
 
           const memberData = await response.json();
-          console.log(memberData)
+          // console.log(memberData)
           setMember(memberData);
         } catch (error) {
           console.error('Error fetching member data:', error);
