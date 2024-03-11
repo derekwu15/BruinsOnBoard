@@ -1,68 +1,70 @@
 import { Container, ProfileCard, ProfileImage, UserInfo } from './styledProfiles';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { useLogout } from "../../hooks/useLogout";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
-const SearchProfiles = (searchInput) => {
-  const [member, setMember] = useState(null);
-  const [email, setEmail] = useState('');
-
-  useEffect(() => {
-    const fetchMemberData = async () => {
-        const userString = localStorage.getItem('user');
-        const user = userString ? JSON.parse(userString) : null;
-      
-        const token = user?.token;
-      
-        if (token) {
-          try {
-            const response = await fetch('http://localhost:4000/api/members/search', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify({ keyword: searchInput }) // Include the keyword in the request body
-            });
-      
-            if (!response.ok) {
-              throw new Error('Failed to fetch member data');
-            }
-      
-            const matches = await response.json();
-            console.log('Matches:', matches);
-            setMember(matches);
-          } catch (error) {
-            console.error('Error fetching member data:', error);
-          }
-        } else {
-          console.error('JWT token not found in local storage');
-        }
-      };      
-
-    fetchMemberData();
-  });
-
-  return (
-    <Container>
-      <ProfileCard>
-        <ProfileImage
-          src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg"
-          alt="Profile"
+const MemberSearch = () => {
+    const { logout } = useLogout();
+    const { user } = useAuthContext();
+    const [members, setMembers] = useState([]);
+    const [searchInput, setSearchInput] = useState("");
+    const [filteredMembers, setFilteredMembers] = useState([]);
+  
+    // Dummy data for demonstration purposes
+    const dummyMembers = [
+      { id: 1, name: "John Doe", username: "john_doe", bio: "Lorem ipsum dolor sit amet" },
+      { id: 2, name: "Jane Smith", username: "jane_smith", bio: "Consectetur adipiscing elit" },
+      { id: 3, name: "Alice Johnson", username: "alice_johnson", bio: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua" },
+      { id: 4, name: "Bob Brown", username: "bob_brown", bio: "Ut enim ad minim veniam" }
+    ];
+  
+    useEffect(() => {
+      // Simulate fetching members from an API
+      // Replace this with your actual API call to fetch members
+      setMembers(dummyMembers);
+    }, []);
+  
+    useEffect(() => {
+      // Filter members based on search input
+      const filtered = members.filter((member) =>
+        member.name.toLowerCase().includes(searchInput.toLowerCase())
+      );
+      setFilteredMembers(filtered);
+    }, [searchInput, members]);
+  
+    const handleSearchChange = (event) => {
+      setSearchInput(event.target.value);
+    };
+  
+    return (
+      <div>
+        <h1>Members</h1>
+        <input
+          type="text"
+          placeholder="Search Members"
+          value={searchInput}
+          onChange={handleSearchChange}
         />
-        <UserInfo>
-          {member ? (
-            <div>
-              <h1>{member.name ? member.name : "Name"}</h1>
-              <p>{member.username ? member.username : "Username"}</p>
-              <p>{email ? email : "Email"}</p>
-              <p>{member.bio ? member.bio : "Bio"}</p>
-            </div>
-          ) : (
-            <p>Loading member data...</p>
-          )}
-        </UserInfo>
-      </ProfileCard>
-    </Container>
-  );
-};
-
-export default SearchProfiles;
+        <Container>
+          {filteredMembers.map((member) => (
+            <ProfileCard key={member.id}>
+              <ProfileImage
+                src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg"
+                alt="Profile"
+              />
+              <UserInfo>
+                <h1>{member.name}</h1>
+                <p>{member.username}</p>
+                <p>{member.bio}</p>
+              </UserInfo>
+            </ProfileCard>
+          ))}
+        </Container>
+        {user && (
+          <button onClick={() => logout()}>Logout</button>
+        )}
+      </div>
+    );
+  };
+  
+  export default MemberSearch;

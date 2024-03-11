@@ -12,7 +12,7 @@ import Messages from "./pages/messages/message";
 import RidesFind from "./pages/rides/rides";
 import Profile from "./pages/profile/profile"
 import ViewProfile from "./pages/profile/viewProfile"
-import SearchProfile from "./pages/profile/searchProfile";
+import MemberSearch from "./pages/profile/searchProfile";
 
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/viewprofile/:userId" element={<ViewProfile />} />
-        <Route path="/searchprofile/" element={<SearchProfile />} />
+        <Route path="/search/" element={<MemberSearch />} />
         <Route path="/login" element={!user ? <Login /> : <Navigate to='/' />} />
         <Route path="/signup" element={!user ? <SignUp /> : <Navigate to='/' />} />
         <Route path="/message" element={<Messages />} />
