@@ -1,15 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { Container, ProfileCard, ProfileImage, UserInfo, EditForm, Input, Textarea } from './styledProfiles';
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
 
   const [member, setMember] = useState(null);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
+
   useEffect(() => {
+
+    if (!user) {
+      console.error('JWT token not found in local storage');
+      navigate('/login');
+      return;
+    }
     const fetchMemberData = async () => {
       const userString = localStorage.getItem('user');
       const user = JSON.parse(userString);
@@ -20,7 +31,8 @@ const ProfilePage = () => {
           const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
             headers: {
               'Authorization': 'Bearer ' + token
-          }});
+            }
+          });
           if (!response.ok) {
             throw new Error('Failed to fetch member data');
           }
@@ -36,7 +48,8 @@ const ProfilePage = () => {
           const response = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
             headers: {
               'Authorization': 'Bearer ' + token
-          }});
+            }
+          });
           if (!response.ok) {
             throw new Error('Failed to fetch member data');
           }
@@ -89,33 +102,33 @@ const ProfilePage = () => {
           alt="Profile"
         />
         <UserInfo>
-        {member ? (
-          <div>
-            <h1>{member.name ? member.name : "Name"}</h1>
-            <p>{member.username ? member.username : "Username"}</p>
-            <p>{email ? email : "Email"}</p>
-            <p>{member.bio ? member.bio : "Bio"}</p>
-          </div>
-        ) : (
-          <p>Loading member data...</p>
-        )}
+          {member ? (
+            <div>
+              <h1>{member.name ? member.name : "Name"}</h1>
+              <p>{member.username ? member.username : "Username"}</p>
+              <p>{email ? email : "Email"}</p>
+              <p>{member.bio ? member.bio : "Bio"}</p>
+            </div>
+          ) : (
+            <p>Loading member data...</p>
+          )}
         </UserInfo>
       </ProfileCard>
       <EditForm>
         <h2>Edit Profile</h2>
         <label>
           Name:
-          <Input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)}/>
+          <Input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} />
         </label>
         <label>
           Username:
-          <Input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)}/>
+          <Input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} />
         </label>
         <label>
           Bio:
           <Textarea placeholder="Enter your bio" rows="4" value={bio} onChange={(e) => setBio(e.target.value)}></Textarea>
         </label>
-        <br/>
+        <br />
         <button onClick={handleSave}>Save</button>
       </EditForm>
     </Container>

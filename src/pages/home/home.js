@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import './home.css'; // Make sure your CSS file is imported
-import AboutPage from "../about/about";
 import BoxContainer from './boxContainer';
 
 const Home = () => {
@@ -17,7 +15,7 @@ const Home = () => {
           <button className="styled-button">Get Started</button>
         </Link>
       </div>
-      <BoxContainer />      
+      <BoxContainer />
     </div>
   );
 };

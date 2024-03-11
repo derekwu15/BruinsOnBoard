@@ -4,30 +4,30 @@ const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken');
 
 const createToken = (_id) => {
-  return jwt.sign({_id}, process.env.JWT_KEY,{expiresIn: '3d'} )
+  return jwt.sign({ _id }, process.env.JWT_KEY, { expiresIn: '3d' })
 }
 
 
 //get all profiles
 const getProfiles = async (req, res) => {
-  const profiles = await Profile.find({}).sort({createdAt: -1})
+  const profiles = await Profile.find({}).sort({ createdAt: -1 })
 
   res.status(200).json(profiles)
 }
 
-//get a single profile 
+//get a single profile
 
 const getProfile = async (req, res) => {
-  const {id} = req.params
+  const { id } = req.params
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: 'No such Profile'})
+    return res.status(404).json({ error: 'No such Profile' })
   }
 
-  const profile = await Profile.findById(id) 
-  
+  const profile = await Profile.findById(id)
+
   if (!profile) {
-    return res.status(404).json({error: "No such profile"})
+    return res.status(404).json({ error: "No such profile" })
   }
 
   res.status(200).json(profile)
@@ -36,69 +36,69 @@ const getProfile = async (req, res) => {
 
 // create a new profile
 const createProfile = async (req, res) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
   try {
     const profile = await Profile.signup(email, password)
 
-    await Member.create({username: '', name: '', bio: '', user_id: profile._id})
+    await Member.create({ username: '', name: '', bio: '', user_id: profile._id })
 
     const token = createToken(profile._id)
 
-    user = {email, token}
+    user = { email, token }
     res.status(200).json(user)
 
-    
+
   } catch (error) {
-    res.status(400).json({error: error.message})
+    res.status(400).json({ error: error.message })
   }
 };
 
-//delete a profile 
+//delete a profile
 const deleteProfile = async (req, res) => {
-  const {id} = req.params
+  const { id } = req.params
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: 'No such Profile'})
+    return res.status(404).json({ error: 'No such Profile' })
   }
 
-  const profile = await Profile.findOneandDelete({_id: id})
+  const profile = await Profile.findOneandDelete({ _id: id })
 
   if (!profile) {
-    return res.status(404).json({error: "No such profile"})
+    return res.status(404).json({ error: "No such profile" })
   }
 
   res.status(200).json(profile)
 }
 
-//update a profile 
-const updateProfile = async (req,res) => {
-  const {id} = req.params
+//update a profile
+const updateProfile = async (req, res) => {
+  const { id } = req.params
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: 'No such Profile'})
+    return res.status(404).json({ error: 'No such Profile' })
   }
 
-  const profile = await Profile.findOneAndUpdate({_id: id}, {
+  const profile = await Profile.findOneAndUpdate({ _id: id }, {
     ...req.body
   })
 
   if (!profile) {
-    return res.status(404).json({error: "No such profile"})
+    return res.status(404).json({ error: "No such profile" })
   }
 
   res.status(200).json(profile)
-} 
+}
 
 const checkLogin = async (req, res) => {
   const { email, password } = req.body;
 
-  try{
+  try {
     const user = await Profile.login(email, password)
 
     const token = createToken(user._id)
-    res.status(200).json({email, token})
-  } catch (error){
-    res.status(400).json({error: error.message})
+    res.status(200).json({ email, token })
+  } catch (error) {
+    res.status(400).json({ error: error.message })
   }
 };
 

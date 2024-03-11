@@ -3,8 +3,10 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { Container, EventContainer, EventAlignContainer, Title, Label, PopupLabel, PopupSubLabel, StyledSelect, DatePickerStyled, Button, EventPopupButton, ButtonsContainer, CenterContainer, TitleContainer } from './styledRides';
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const localizer = momentLocalizer(moment);
 
@@ -12,13 +14,16 @@ const EventCalendar = () => {
 
   // popup for clicking on an event, need to add join ride, quantitty, to/from/when
   const [showEvent, setShowEvent] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null); 
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [member, setMember] = useState(null);
   const displayName = []
   const handleEventClick = (event) => {
     setSelectedEvent(event);
     setShowEvent(true);
   };
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
+
 
   const fetchData = async () => {
     try {
@@ -50,20 +55,20 @@ const EventCalendar = () => {
     }
   };
 
-  const sendEmail = async (email, title, start,end, displayName) => {
+  const sendEmail = async (email, title, start, end, displayName) => {
     try {
       const response = await fetch('http://localhost:4000/api/sendEmail', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email,title, start, end, displayName }), // Pass the recipient email address to the backend
+        body: JSON.stringify({ email, title, start, end, displayName }), // Pass the recipient email address to the backend
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to send email');
       }
-  
+
       const data = await response.json();
       console.log(data); // Log response from the backend
     } catch (error) {
@@ -71,19 +76,20 @@ const EventCalendar = () => {
     }
   };
 
-  const handleJoin = async(event) => {
-    
+  const handleJoin = async (event) => {
+
     const memb = event.members.push(member.user_id)
-  
-    const cap = event.capacity -= 1 
-    try{
+
+    const cap = event.capacity -= 1
+    try {
       const userString = localStorage.getItem('user');
       const user = JSON.parse(userString);
       const token = user.token
       const response = await fetch('http://localhost:4000/api/members/' + member.user_id, {
         headers: {
           'Authorization': 'Bearer ' + token
-      }});
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch profile data for ID: ' + member.user_id);
       }
@@ -104,7 +110,8 @@ const EventCalendar = () => {
         const response = await fetch('http://localhost:4000/api/profiles/' + uid, {
           headers: {
             'Authorization': 'Bearer ' + token
-        }});
+          }
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch profile data for ID: ' + uid);
         }
@@ -121,7 +128,7 @@ const EventCalendar = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({memb, cap})
+        body: JSON.stringify({ memb, cap })
       });
 
       if (!response.ok) {
@@ -129,7 +136,7 @@ const EventCalendar = () => {
       }
 
       console.log("Ride Patched successfully");
-      for (const email of memberEmails){
+      for (const email of memberEmails) {
 
         sendEmail(email, event.title, event.start, event.end, displayName)
       }
@@ -145,20 +152,20 @@ const EventCalendar = () => {
 
   // stylized popup for ride information
   const EventsPopup = ({ event, onClose }) => (
-  <EventContainer>
-    <EventAlignContainer>
-      <PopupLabel>{event.title}</PopupLabel>
-      <PopupSubLabel>{moment(event.start).format('MMMM D, YYYY')}</PopupSubLabel>
-      <PopupSubLabel>{moment(event.start).format('h:mm A')} - {moment(event.end).format('h:mm A')}</PopupSubLabel>
-      <PopupSubLabel>capacity: {event.capacity} spots left</PopupSubLabel>
-      <PopupSubLabel>members: {displayName.join(', ')}</PopupSubLabel>
-      <ButtonsContainer>
-        <EventPopupButton onClick={() => handleJoin(event)}>JOIN</EventPopupButton>
-        <EventPopupButton onClick={onClose}>CLOSE</EventPopupButton>
-      </ButtonsContainer>
-    </EventAlignContainer>
-  </EventContainer>
-);
+    <EventContainer>
+      <EventAlignContainer>
+        <PopupLabel>{event.title}</PopupLabel>
+        <PopupSubLabel>{moment(event.start).format('MMMM D, YYYY')}</PopupSubLabel>
+        <PopupSubLabel>{moment(event.start).format('h:mm A')} - {moment(event.end).format('h:mm A')}</PopupSubLabel>
+        <PopupSubLabel>capacity: {event.capacity} spots left</PopupSubLabel>
+        <PopupSubLabel>members: {displayName.join(', ')}</PopupSubLabel>
+        <ButtonsContainer>
+          <EventPopupButton onClick={() => handleJoin(event)}>JOIN</EventPopupButton>
+          <EventPopupButton onClick={onClose}>CLOSE</EventPopupButton>
+        </ButtonsContainer>
+      </EventAlignContainer>
+    </EventContainer>
+  );
 
   // logic for changing to and from
   const [fromLocation, setFromLocation] = useState("lax");
@@ -194,7 +201,7 @@ const EventCalendar = () => {
     const from = fromLocation;
     const date = moment(selectedDate).format('MMMM D, YYYY');
     const time = moment(selectedDate.getTime()).format('h:mm A');
-    
+
     const members = [];
     const capacity = 4;
 
@@ -223,6 +230,13 @@ const EventCalendar = () => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
+
+    if (!user) {
+      console.error('JWT token not found in local storage');
+      navigate('/login');
+      return;
+    }
+
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:4000/api/rides');
@@ -255,7 +269,7 @@ const EventCalendar = () => {
 
     fetchData();
 
-    
+
     const fetchMemberData = async () => {
       const userString = localStorage.getItem('user');
       const user = JSON.parse(userString);
@@ -266,7 +280,8 @@ const EventCalendar = () => {
           const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
             headers: {
               'Authorization': 'Bearer ' + token
-          }});
+            }
+          });
           if (!response.ok) {
             throw new Error('Failed to fetch member data');
           }
@@ -304,42 +319,42 @@ const EventCalendar = () => {
         </TitleContainer>
         <CenterContainer>
           <Container>
-          <Label htmlFor="fromLocation">FROM:</Label>
-          <StyledSelect id="fromLocation" value={fromLocation} onChange={handleFromChange}>
-            {locationOptions.map((option) => (
+            <Label htmlFor="fromLocation">FROM:</Label>
+            <StyledSelect id="fromLocation" value={fromLocation} onChange={handleFromChange}>
+              {locationOptions.map((option) => (
                 <option key={option} value={option}>
                   {option.toUpperCase()}
                 </option>
-            ))}
-          </StyledSelect>
-          <Label htmlFor="toLocation">TO:</Label>
-          <StyledSelect id="toLocation" value={toLocation} onChange={handleToChange}>
-            {locationOptions.map((option) => (
-              <option key={option} value={option}>
-                {option.toUpperCase()}
-              </option>
-            ))}
-          </StyledSelect>
-          <Label htmlFor="datePicker">WHEN:</Label>
-          <DatePickerStyled
-            selected={selectedDate}
-            onChange={handleDateChange}
-            showTimeSelect
-            dateFormat="MMMM d, yyyy h:mm aa"
-            timeFormat="h:mm aa"
-            timeIntervals={30}
-            timeCaption="Time"
-            minDate={new Date()}
-            minTime={new Date(minTime)}
-            maxTime={new Date().setHours(23, 30)}
-          />
-          </Container>  
+              ))}
+            </StyledSelect>
+            <Label htmlFor="toLocation">TO:</Label>
+            <StyledSelect id="toLocation" value={toLocation} onChange={handleToChange}>
+              {locationOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option.toUpperCase()}
+                </option>
+              ))}
+            </StyledSelect>
+            <Label htmlFor="datePicker">WHEN:</Label>
+            <DatePickerStyled
+              selected={selectedDate}
+              onChange={handleDateChange}
+              showTimeSelect
+              dateFormat="MMMM d, yyyy h:mm aa"
+              timeFormat="h:mm aa"
+              timeIntervals={30}
+              timeCaption="Time"
+              minDate={new Date()}
+              minTime={new Date(minTime)}
+              maxTime={new Date().setHours(23, 30)}
+            />
+          </Container>
         </CenterContainer>
         <ButtonsContainer>
-          <Button onClick={handleCreate}>CREATE</Button> 
+          <Button onClick={handleCreate}>CREATE</Button>
         </ButtonsContainer>
-        {showEvent && (<EventsPopup event={selectedEvent} onClose={() => setShowEvent(false)} /> )}
-        </div>
+        {showEvent && (<EventsPopup event={selectedEvent} onClose={() => setShowEvent(false)} />)}
+      </div>
     </div>
   );
 };

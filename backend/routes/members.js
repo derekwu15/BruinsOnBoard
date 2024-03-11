@@ -1,10 +1,10 @@
 const express = require('express')
 const {
-    createMember,
-    getMember,
-    deleteMember,
-    updateMember,
-    getMembers
+  createMember,
+  getMember,
+  deleteMember,
+  updateMember,
+  getMembers
 } = require('../controllers/memberController')
 const requireAuth = require('../middleware/requireAuth')
 
