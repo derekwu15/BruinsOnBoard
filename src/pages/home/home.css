@@ -1,8 +1,10 @@
 /* home.css */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&family=Outfit:wght@100..900&display=swap');
 
 .main-container {
     position: relative;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,18 +15,20 @@
   }
   
   .main-container::before {
+    margin: 40px;
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /*background-image: url('./cityscape.jpg'); */
+    background-image: url('./home-background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     opacity: 0.5; /* Adjust opacity as needed */
     z-index: -1;
+
   }
   
   .welcome-text {
@@ -37,20 +41,50 @@
   
   .styled-button {
     font-size: 1.5rem;
-    font-family: 'Outfit:wght@100..900';
+    font-family: 'Outfit';
     padding: 15px 30px;
     margin-top: 40px;
     cursor: pointer;
     border: none;
     border-radius: 20px;
     background-color: #031d39;
-    color: white;
+    color: #ffffff;
     transition: background-color 0.2s;
   }
   
   .styled-button:hover {
     background-color: #031d39;
     color: #ffc52d;
+  }
+
+    .share-ride-text {
+        margin: 40px;
+        font-family: 'Baskervville', serif; /* Fallback font added */
+        font-style: italic;
+        font-size: 1.3rem;
+    }
+  
+    /* Add this at the end of your home.css file */
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  
+  @keyframes blinkCursor {
+    from { border-right-color: rgba(0, 0, 0, 0.75); }
+    to { border-right-color: transparent; }
+  }
+  
+  .typing {
+    font-family: 'Courier New', Courier, monospace; /* Or any monospaced font you like */
+    display: inline-block;
+    overflow: hidden;
+    border-right: 3px solid;
+    white-space: nowrap;
+    animation: typing 3.5s steps(30) 1s forwards,
+               blinkCursor 500ms steps(30) infinite;
+    max-width: 100%;
   }
   
   .about-section {
