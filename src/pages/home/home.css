@@ -1,0 +1,15 @@
+/* App.css */
+.app-container {
+    /* Set the background image */
+    background-color: #a2cffe;
+    /* Specify background image properties */
+    background-size: cover; /* Cover the entire container */
+    background-position: center; /* Center the image */
+    /* Add any other styles you need */
+    /* For example: */
+    height: 100vh; /* Make the container full height */
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+  }
+  
