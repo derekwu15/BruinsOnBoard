@@ -2,12 +2,10 @@ import { Container, ProfileCard, ProfileImage, UserInfo } from './styledProfiles
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from "../../hooks/useAuthContext";
 
 
 const ViewProfiles = () => {
   const navigate = useNavigate();
-  const { user } = useAuthContext();
 
   const { userId } = useParams();
   console.log('Received userId:', userId); // Added console.log
