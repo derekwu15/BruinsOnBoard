@@ -4,6 +4,8 @@ import { NavLink as Link } from "react-router-dom";
 import {useLogout} from '../../hooks/useLogout'
 import { useAuthContext } from "../../hooks/useAuthContext";
 import logo from '../../logo.png';
+import { useNavigate } from 'react-router-dom';
+
 
 const Nav = styled.nav`
   background: #031d39;
@@ -143,6 +145,7 @@ const Navbar = () => {
   const {logout} = useLogout()
   const { user } = useAuthContext()
   const [dropdown, setDropdown] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setDropdown(!dropdown);
@@ -158,6 +161,7 @@ const Navbar = () => {
     if (event.key === 'Enter') {
       // Implement your search logic here, e.g., navigate to search page or filter content
       console.log(searchInput); // For example, log the search input
+      navigate(`members/search/${searchInput}`);
       // You might want to navigate to a search page or perform any other action
     }
   };

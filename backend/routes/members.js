@@ -3,7 +3,8 @@ const {
     createMember,
     getMember,
     deleteMember,
-    updateMember
+    updateMember,
+    search
 } = require('../controllers/memberController')
 const requireAuth = require('../middleware/requireAuth')
 
@@ -18,5 +19,7 @@ router.get('/:id', getMember)
 router.delete('/:id', deleteMember)
 
 router.patch('/:id', updateMember)
+
+router.post('/search', search)
 
 module.exports = router
