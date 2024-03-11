@@ -64,9 +64,9 @@ const Textarea = styled.textarea`
 const ProfilePage = () => {
 
   const [member, setMember] = useState(null);
+  const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [bio, setBio] = useState('');
   useEffect(() => {
     const fetchMemberData = async () => {
@@ -89,13 +89,26 @@ const ProfilePage = () => {
         } catch (error) {
           console.error('Error fetching member data:', error);
         }
+
+        try {
+          const userId = jwtDecode(token);
+          const response = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
+            headers: {
+              'Authorization': 'Bearer ' + token
+          }});
+          if (!response.ok) {
+            throw new Error('Failed to fetch member data');
+          }
+
+          const profileData = await response.json();
+          setEmail(profileData.email);
+        } catch (error) {
+          console.error('Error fetching email:', error);
+        }
       } else {
         console.error('JWT token not found in local storage');
       }
     };
-
-
-
     fetchMemberData();
   }, []);
 
@@ -139,7 +152,7 @@ const ProfilePage = () => {
           <div>
             <h1>{member.name ? member.name : "Name"}</h1>
             <p>{member.username ? member.username : "Username"}</p>
-            <p>{member.email ? member.email : "Email"}</p>
+            <p>{email ? email : "Email"}</p>
             <p>{member.bio ? member.bio : "Bio"}</p>
           </div>
         ) : (
@@ -156,10 +169,6 @@ const ProfilePage = () => {
         <label>
           Username:
           <Input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)}/>
-        </label>
-        <label>
-          Email:
-          <Input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)}/>
         </label>
         <label>
           Bio:
