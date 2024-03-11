@@ -1,23 +1,29 @@
-import { Container, ProfileCard, ProfileImage, UserInfo} from './styledProfiles';
-import {jwtDecode} from 'jwt-decode';
+import { Container, ProfileCard, ProfileImage, UserInfo } from './styledProfiles';
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 const ViewProfiles = () => {
+  const { userId } = useParams();
+  console.log('Received userId:', userId); // Added console.log
 
   const [member, setMember] = useState(null);
   const [email, setEmail] = useState('');
+
   useEffect(() => {
     const fetchMemberData = async () => {
       const userString = localStorage.getItem('user');
-      const user = JSON.parse(userString);
-      const token = user.token
+      const user = userString ? JSON.parse(userString) : null;
+
+      const token = user?.token;
+
       if (token) {
         try {
-          const userId = jwtDecode(token);
-          const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
+          const response = await fetch(`http://localhost:4000/api/members/${userId}`, {
             headers: {
-              'Authorization': 'Bearer ' + token
-          }});
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
           if (!response.ok) {
             throw new Error('Failed to fetch member data');
           }
@@ -29,13 +35,14 @@ const ViewProfiles = () => {
         }
 
         try {
-          const userId = jwtDecode(token);
-          const response = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
+          const response = await fetch(`http://localhost:4000/api/profiles/${userId}`, {
             headers: {
-              'Authorization': 'Bearer ' + token
-          }});
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
           if (!response.ok) {
-            throw new Error('Failed to fetch member data');
+            throw new Error('Failed to fetch profile data');
           }
 
           const profileData = await response.json();
@@ -47,8 +54,9 @@ const ViewProfiles = () => {
         console.error('JWT token not found in local storage');
       }
     };
+
     fetchMemberData();
-  }, []);
+  }, [userId]);
 
   return (
     <Container>
@@ -58,16 +66,16 @@ const ViewProfiles = () => {
           alt="Profile"
         />
         <UserInfo>
-        {member ? (
-          <div>
-            <h1>{member.name ? member.name : "Name"}</h1>
-            <p>{member.username ? member.username : "Username"}</p>
-            <p>{email ? email : "Email"}</p>
-            <p>{member.bio ? member.bio : "Bio"}</p>
-          </div>
-        ) : (
-          <p>Loading member data...</p>
-        )}
+          {member ? (
+            <div>
+              <h1>{member.name ? member.name : "Name"}</h1>
+              <p>{member.username ? member.username : "Username"}</p>
+              <p>{email ? email : "Email"}</p>
+              <p>{member.bio ? member.bio : "Bio"}</p>
+            </div>
+          ) : (
+            <p>Loading member data...</p>
+          )}
         </UserInfo>
       </ProfileCard>
     </Container>

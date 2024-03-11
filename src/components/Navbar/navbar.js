@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { NavLink as Link } from "react-router-dom";
 import {useLogout} from '../../hooks/useLogout'
 import { useAuthContext } from "../../hooks/useAuthContext";
+import logo from '../../logo.png';
 
 const Nav = styled.nav`
-  background: #0172c0;
+  background: #031d39;
   height: 60px;
   display: flex;
   justify-content: space-between;
@@ -166,6 +167,7 @@ const Navbar = () => {
     <>
       <Nav>
         <NavMenu>
+          <img src={logo} alt="Logo" width="55" height="55"/>
           <NavLink to="/" activeStyle>
             Home
           </NavLink>
@@ -192,7 +194,7 @@ const Navbar = () => {
                 <DropdownLink to="/profile" activeStyle>
                   Your Profile
                 </DropdownLink>
-                <DropdownLink as="LogoutButton" onClick={() => logout()} activeStyle>
+                <DropdownLink as="LogoutButton" onClick={() => logout()}activeStyle>
                   Log out
                 </DropdownLink> 
               </DropdownMenu>

@@ -2,7 +2,7 @@
 
 BruinsOnBoard is a rideshare application for university students to easily find other students to share an Uber/Lyft ride to get to and from UCLA and LAX. As broke college students, Uber costs to LAX can be devastating to our wallets, so BruinsOnBoard in here to help reduce transportation costs. Users can create a ride group or join existing groups, and view profiles. Never again will you have to pay $50 for an Uber ride!
 
-![logo](./logo.jpg)
+![logo](./src/logo.png)
 
 ## Running the Application Locally
 To run the application locally, first clone the repository and install necessary dependences:
