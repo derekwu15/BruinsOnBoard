@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { jwtDecode } from 'jwt-decode';
 import { Container, EventContainer, EventAlignContainer, Title, Label, PopupLabel, PopupSubLabel, StyledSelect, DatePickerStyled, Button, EventPopupButton, ButtonsContainer, CenterContainer, TitleContainer } from './styledRides';
 import { useNavigate } from 'react-router-dom';
+import ViewProfiles from '../profile/viewProfile'
 
 const localizer = momentLocalizer(moment);
 
@@ -20,14 +21,22 @@ const EventCalendar = () => {
     setSelectedEvent(event);
     setShowEvent(true);
   };
+
   const navigate = useNavigate();
 
   const fetchData = async () => {
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+
+    if (!user) {
+      console.error('JWT token not found in local storage');
+      navigate('/login');
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:4000/api/rides');
       const data = await response.json();
-
-
 
       const formattedData = data.map(eventData => {
         const eventDate = moment(eventData.date + ' ' + eventData.time, 'MMMM DD, YYYY h:mm A').toDate();
@@ -37,10 +46,8 @@ const EventCalendar = () => {
           title: `${eventData.from.toUpperCase()} TO ${eventData.to.toUpperCase()}`,
           start: eventDate,
           end: new Date(eventDate.getTime() + eventDuration),
-
           capacity: eventData.capacity,
           members: eventData.members,
-
         };
       });
 
@@ -48,7 +55,33 @@ const EventCalendar = () => {
     } catch (error) {
       console.error('Error fetching events:', error);
     }
-  };
+
+    const fetchMemberData = async () => {
+      const user = userString ? JSON.parse(userString) : null;
+      const token = user.token;
+      if (token) {
+        try {
+          const userId = jwtDecode(token);
+          const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
+            headers: {
+              'Authorization': 'Bearer ' + token
+            }
+          });
+          if (!response.ok) {
+            throw new Error('Failed to fetch member data');
+          }
+  
+          const memberData = await response.json();
+          setMember(memberData);
+        } catch (error) {
+          console.error('Error fetching member data:', error);
+        }
+      } else {
+        console.error('JWT token not found in local storage');
+      }
+    };
+    fetchMemberData();
+  }
 
   const sendEmail = async (email, title, start, end, displayName) => {
     try {
@@ -73,74 +106,99 @@ const EventCalendar = () => {
 
   const handleJoin = async (event) => {
 
-    const memb = event.members.push(member.user_id)
+    console.log(member.user_id);
 
-    const cap = event.capacity -= 1
-    try {
-      const userString = localStorage.getItem('user');
-      const user = JSON.parse(userString);
-      const token = user.token
-      const response = await fetch('http://localhost:4000/api/members/' + member.user_id, {
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch profile data for ID: ' + member.user_id);
-      }
-      const memberData = await response.json();
-      displayName.push(memberData.name);
-    } catch (error) {
-      console.error('Error fetching profile data:', error);
-    }
+    // try {
+    //   const userString = localStorage.getItem('user');
+    //   const user = JSON.parse(userString);
+    //   const token = user.token
+    //   const response = await fetch('http://localhost:4000/api/members/' + member.user_id, {
+    //     headers: {
+    //       'Authorization': 'Bearer ' + token
+    //     }
+    //   });
+    //   if (!response.ok) {
+    //     throw new Error('Failed to fetch profile data for ID: ' + member.user_id);
+    //   }
+    //   const memberData = await response.json();
+    //   displayName.push(memberData.name);
+    // } catch (error) {
+    //   console.error('Error fetching profile data:', error);
+    // }
 
-    const memberEmails = [];
-    try {
-      const userString = localStorage.getItem('user');
-      const user = JSON.parse(userString);
-      const token = user.token
+    // const memberEmails = [];
+    // try {
+    //   const userString = localStorage.getItem('user');
+    //   const user = JSON.parse(userString);
+    //   const token = user.token
 
-      for (const uid of event.members) {
-        const response = await fetch('http://localhost:4000/api/profiles/' + uid, {
+    //   for (const uid of event.members) {
+    //     const response = await fetch('http://localhost:4000/api/profiles/' + uid, {
+    //       headers: {
+    //         'Authorization': 'Bearer ' + token
+    //       }
+    //     });
+    //     if (!response.ok) {
+    //       throw new Error('Failed to fetch profile data for ID: ' + uid);
+    //     }
+    //     const memberData = await response.json();
+    //     memberEmails.push(memberData.email);
+    //   }
+    // } catch (error) {
+    //   console.error('Error fetching profile data:', error);
+    // }
+
+    // const memb = ["hello"]
+
+    // const cap = event.capacity -= 1
+
+    // console.log(event.id)
+    // console.log(event.capacity)
+    // console.log(event.members)
+
+    if (selectedEvent && selectedEvent.capacity >= 1) {
+      try {
+        const updatedCapacity = selectedEvent.capacity - 1;
+        const updatedMembers = [...selectedEvent.members, "newMember@example.com"]; // Adjust the new member value accordingly
+        
+        const response = await fetch(`http://localhost:4000/api/rides/${selectedEvent.id}`, {
+          method: "PATCH",
           headers: {
-            'Authorization': 'Bearer ' + token
-          }
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            capacity: updatedCapacity,
+            members: updatedMembers,
+          }),
         });
-        if (!response.ok) {
-          throw new Error('Failed to fetch profile data for ID: ' + uid);
-        }
-        const memberData = await response.json();
-        memberEmails.push(memberData.email);
+  
+        if (!response.ok) throw new Error("Network response was not ok");
+  
+        // Update the selected event with new capacity and members
+        const updatedSelectedEvent = {
+          ...selectedEvent,
+          capacity: updatedCapacity,
+          members: updatedMembers,
+        };
+        
+        setSelectedEvent(updatedSelectedEvent);
+  
+        // Update the events array to reflect this change
+        setEvents((prevEvents) =>
+          prevEvents.map((event) =>
+            event.id === selectedEvent.id ? updatedSelectedEvent : event
+          )
+        );
+  
+        console.log("Ride joined successfully");
+      } catch (error) {
+        console.error("Error joining the ride:", error);
       }
-    } catch (error) {
-      console.error('Error fetching profile data:', error);
+    } else {
+      console.log("Ride is at full capacity or selected event is not defined.");
     }
 
-    try {
-      const response = await fetch("http://localhost:4000/api/rides/" + event.id, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ memb, cap })
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      console.log("Ride Patched successfully");
-      for (const email of memberEmails) {
-
-        sendEmail(email, event.title, event.start, event.end, displayName)
-      }
-    } catch (error) {
-      console.error("Invalid", error);
-    }
-
-    fetchData()
-
-  }
+}
 
   // stylized popup for ride information
   const EventsPopup = ({ event, onClose }) => (
@@ -149,8 +207,8 @@ const EventCalendar = () => {
         <PopupLabel>{event.title}</PopupLabel>
         <PopupSubLabel>{moment(event.start).format('MMMM D, YYYY')}</PopupSubLabel>
         <PopupSubLabel>{moment(event.start).format('h:mm A')} - {moment(event.end).format('h:mm A')}</PopupSubLabel>
-        <PopupSubLabel>capacity: {event.capacity} spots left</PopupSubLabel>
-        <PopupSubLabel>members: {displayName.join(', ')}</PopupSubLabel>
+        <PopupSubLabel>capacity: {event.capacity} spot(s) left</PopupSubLabel>
+        <PopupSubLabel>members: {event.members.join(', ')}</PopupSubLabel>
         <ButtonsContainer>
           <EventPopupButton onClick={() => handleJoin(event)}>JOIN</EventPopupButton>
           <EventPopupButton onClick={onClose}>CLOSE</EventPopupButton>
@@ -219,67 +277,7 @@ const EventCalendar = () => {
 
   const [events, setEvents] = useState([]);
 
- useEffect(() => {
-  const fetchData = async () => {
-    const userString = localStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : null;
-
-    if (!user) {
-      console.error('JWT token not found in local storage');
-      navigate('/login');
-      return;
-    }
-
-    try {
-      const response = await fetch('http://localhost:4000/api/rides');
-      const data = await response.json();
-
-      const formattedData = data.map(eventData => {
-        const eventDate = moment(eventData.date + ' ' + eventData.time, 'MMMM DD, YYYY h:mm A').toDate();
-        const eventDuration = 30 * 60 * 1000;
-        return {
-          id: eventData._id,
-          title: `${eventData.from.toUpperCase()} TO ${eventData.to.toUpperCase()}`,
-          start: eventDate,
-          end: new Date(eventDate.getTime() + eventDuration),
-          capacity: eventData.capacity,
-          members: eventData.members,
-        };
-      });
-
-      setEvents(formattedData);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-    }
-
-    const fetchMemberData = async () => {
-      const user = userString ? JSON.parse(userString) : null;
-      const token = user.token;
-      if (token) {
-        try {
-          const userId = jwtDecode(token);
-          const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
-            headers: {
-              'Authorization': 'Bearer ' + token
-            }
-          });
-          if (!response.ok) {
-            throw new Error('Failed to fetch member data');
-          }
-
-          const memberData = await response.json();
-          setMember(memberData);
-        } catch (error) {
-          console.error('Error fetching member data:', error);
-        }
-      } else {
-        console.error('JWT token not found in local storage');
-      }
-    };
-
-    fetchMemberData();
-  };
-
+useEffect(() => {
   fetchData();
 }, [navigate]);
 
