@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { Container, ProfileCard, ProfileImage, UserInfo, EditForm, Input, Textarea } from './styledProfiles';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
+
+const SetupProfileMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 100vh;
+`;
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -16,7 +26,6 @@ const ProfilePage = () => {
     const fetchData = async () => {
       const userString = localStorage.getItem('user');
       const user = userString ? JSON.parse(userString) : null;
-
       if (!user) {
         console.error('JWT token not found in local storage');
         navigate('/login');
@@ -133,46 +142,49 @@ const ProfilePage = () => {
     }
   }
 
-  return (
-    <Container>
-      <ProfileCard>
-        <ProfileImage
-          src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg"
-          alt="Profile"
-        />
-        <UserInfo>
-          {member ? (
-            <div>
-              <h1>{member.name ? member.name : "Name"}</h1>
-              <p>{member.username ? member.username : "Username"}</p>
-              <p>{email ? email : "Email"}</p>
-              <p>{member.bio ? member.bio : "Bio"}</p>
-            </div>
-          ) : (
-            <p>Loading member data...</p>
-          )}
-        </UserInfo>
-      </ProfileCard>
-      <EditForm>
-        <h2>Edit Profile</h2>
-        <label>
-          Name:
-          <Input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} required />
-        </label>
-        <label>
-          Username:
-          <Input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-        </label>
-        <label>
-          Bio:
-          <Textarea placeholder="Enter your bio" rows="4" value={bio} onChange={(e) => setBio(e.target.value)} required />
-        </label>
-        <br />
-        <button onClick={handleSave}>Save</button>
-        {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
-      </EditForm>
-    </Container>
-  );
+return (
+  <Container>
+    <ProfileCard>
+      <ProfileImage
+        src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg"
+        alt="Profile"
+      />
+      <UserInfo>
+        {member ? (
+          <div>
+            <h1>{member.name ? member.name : "Name"}</h1>
+            <p>{member.username ? member.username : "Username"}</p>
+            <p>{email ? email : "Email"}</p>
+            <p>{member.bio ? member.bio : "Bio"}</p>
+          </div>
+        ) : (
+          <p>Loading member data...</p>
+        )}
+      </UserInfo>
+    </ProfileCard>
+<EditForm>
+      {(!member || !member.name) && (
+        <div style={{ color: 'red' }}>Please finish setting up your profile!</div>
+      )}
+      <h2>Edit Profile</h2>
+      <label>
+        Name:
+        <Input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} required />
+      </label>
+      <label>
+        Username:
+        <Input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+      </label>
+      <label>
+        Bio:
+        <Textarea placeholder="Enter your bio" rows="4" value={bio} onChange={(e) => setBio(e.target.value)} required />
+      </label>
+      <br />
+      <button onClick={handleSave}>Save</button>
+      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
+    </EditForm>
+  </Container>
+);
 };
 
 export default ProfilePage;
