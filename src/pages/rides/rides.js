@@ -106,7 +106,7 @@ const EventCalendar = () => {
 
   const handleJoin = async (event) => {
 
-    console.log(member.user_id);
+    // console.log(member.user_id);
 
     // try {
     //   const userString = localStorage.getItem('user');
@@ -143,18 +143,13 @@ const EventCalendar = () => {
     //     }
     //     const memberData = await response.json();
     //     memberEmails.push(memberData.email);
+    //     console.log("here are the" , memberEmails)
     //   }
     // } catch (error) {
     //   console.error('Error fetching profile data:', error);
     // }
 
-    // const memb = ["hello"]
-
-    // const cap = event.capacity -= 1
-
-    // console.log(event.id)
-    // console.log(event.capacity)
-    // console.log(event.members)
+  
 
     if (selectedEvent && selectedEvent.capacity >= 1 && !selectedEvent.members.includes(member.username)) {
       try {

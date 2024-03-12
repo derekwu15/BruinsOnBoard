@@ -22,7 +22,7 @@ const AboutPage = () => {
       </List>
       <SubHeading>Safety First</SubHeading>
       <Paragraph>
-        Your safety is our top priority. BruinsOnBoard is built on trust and transparency. All users are verified UCLA students, and you have full control over whom you choose to ride with. In-app ratings and reviews allow you to see feedback from fellow Bruins, ensuring a secure and enjoyable ride-sharing experience.
+        Your safety is our top priority. BruinsOnBoard is built on trust and transparency. All users are verified UCLA students, and you have full control over whom you choose to ride with. In-app profiles allow you to see other Bruins, ensuring a secure and enjoyable ride-sharing experience.
       </Paragraph>
       <SubHeading>Join Our Community</SubHeading>
       <Paragraph>
