@@ -1,5 +1,5 @@
 import React from 'react';
-import { AboutContainer, Heading, SubHeading, Paragraph, List, ListItem, BoldText } from './styledAbout';
+import { AboutContainer, Heading, SubHeading, Paragraph, StepContainer, StepItem, BoldText } from './styledAbout';
 
 const AboutPage = () => {
   return (
@@ -14,12 +14,12 @@ const AboutPage = () => {
         Navigating the bustling streets of Los Angeles can be daunting and expensive for college students. BruinsOnBoard emerges as a sustainable, economical, and social way to travel. Our mission is to empower UCLA students with a platform that not only reduces the financial burden of transportation but also fosters a sense of community through shared experiences.
       </Paragraph>
       <SubHeading>How It Works</SubHeading>
-      <List>
-        <ListItem><BoldText>Sign Up:</BoldText> Create your profile using your UCLA email to ensure a trusted network of students.</ListItem>
-        <ListItem><BoldText>Plan Your Ride:</BoldText> Enter your destination and schedule to find fellow Bruins who are heading the same way.</ListItem>
-        <ListItem><BoldText>Connect:</BoldText> Choose who you’d like to ride with based on profiles.</ListItem>
-        <ListItem><BoldText>Share and Save:</BoldText> Meet up, enjoy the company of a new friend, and split the fare.</ListItem>
-      </List>
+      <StepContainer>
+        <StepItem><BoldText>Sign Up:</BoldText> Create your profile using your UCLA email to ensure a trusted network of students.</StepItem>
+        <StepItem><BoldText>Plan a Ride:</BoldText> Enter your destination and schedule to find Bruins who are heading the same way.</StepItem>
+        <StepItem><BoldText>Connect:</BoldText> Choose who you’d like to ride with based on profiles.</StepItem>
+        <StepItem><BoldText>Share and Save:</BoldText> Meet up, enjoy the company of a new friend, and split the fare.</StepItem>
+      </StepContainer>
       <SubHeading>Safety First</SubHeading>
       <Paragraph>
         Your safety is our top priority. BruinsOnBoard is built on trust and transparency. All users are verified UCLA students, and you have full control over whom you choose to ride with. In-app profiles allow you to see other Bruins, ensuring a secure and enjoyable ride-sharing experience.

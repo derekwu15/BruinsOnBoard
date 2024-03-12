@@ -18,6 +18,7 @@ export const ProfileCard = styled(Link)`
   align-items: center;
   text-decoration: none;
   color: inherit;
+  font-family: 'Outfit';
 `;
 
 export const ProfileImage = styled.img`
@@ -40,4 +41,5 @@ export const SearchBar = styled.input`
   font-size: 16px;
   outline: none;
   display: block;
+  font-family: 'Outfit';
 `;

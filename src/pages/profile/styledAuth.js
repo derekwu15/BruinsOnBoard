@@ -18,12 +18,14 @@ export const AuthBox = styled.div`
 
 export const AuthHeader = styled.h1`
   font-size: 24px;
+  font-family: 'Outfit';
   text-align: center;
   color: #333;
 `;
 
 export const AuthForm = styled.form`
   display: flex;
+  font-family: 'Outfit';
   flex-direction: column;
   align-items: center;
 `;
@@ -32,6 +34,7 @@ export const AuthLabel = styled.label`
   width: 100%;
   margin-bottom: 10px;
   color: #555;
+  font-family: 'Outfit';
 `;
 
 export const AuthInput = styled.input`
@@ -42,11 +45,12 @@ export const AuthInput = styled.input`
   border-radius: 4px;
   font-size: 16px;
   box-sizing: border-box;
+  font-family: 'Outfit';
 `;
 
 export const AuthSubmitButton = styled.input`
   width: 100%;
-  background-color: #0172c0;
+  background-color: #031d39;
   color: #fff;
   padding: 12px;
   font-size: 16px;
@@ -54,9 +58,11 @@ export const AuthSubmitButton = styled.input`
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: 'Outfit';
 
   &:hover {
-    background-color: #01508b;
+    background-color: #021326;
+    color: #ffc52d;
   }
 `;
 
@@ -64,6 +70,7 @@ export const AuthLink = styled.p`
   text-align: center;
   margin-top: 15px;
   color: #555;
+  font-family: 'Outfit';
 
   a {
     color: #0172c0;

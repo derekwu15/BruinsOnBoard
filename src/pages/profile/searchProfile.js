@@ -97,7 +97,7 @@ const MemberSearch = () => {
 
   return (
     <div>
-      <h1 style={{ textAlign: 'center' }}>Members</h1>
+      <h1 style={{ textAlign: 'center', fontFamily: 'Outfit' }}>Members</h1>
       <SearchBar
         type="text"
         placeholder="Search Members"

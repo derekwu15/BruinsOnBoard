@@ -252,9 +252,9 @@ const EventCalendar = () => {
         <PopupLabel>{event.title}</PopupLabel>
         <PopupSubLabel>{moment(event.start).format('MMMM D, YYYY')}</PopupSubLabel>
         <PopupSubLabel>{moment(event.start).format('h:mm A')} - {moment(event.end).format('h:mm A')}</PopupSubLabel>
-        <PopupSubLabel>capacity: {event.capacity} spot(s) left</PopupSubLabel>
+        <PopupSubLabel>{event.capacity} spot(s) left</PopupSubLabel>
         <PopupSubLabel>
-          members:{' '}
+          Members:{' '}
           {event.members.map((member, index) => {
             const [username, userId] = member.split(':');
             return (
@@ -266,9 +266,9 @@ const EventCalendar = () => {
           })}
         </PopupSubLabel>
         <ButtonsContainer>
-          <EventPopupButton onClick={() => handleJoin(event)}>JOIN</EventPopupButton>
-          <EventPopupButton onClick={() => handleLeave(event)}>LEAVE</EventPopupButton>
-          <EventPopupButton onClick={onClose}>CLOSE</EventPopupButton>
+          <EventPopupButton onClick={() => handleJoin(event)}>Join</EventPopupButton>
+          <EventPopupButton onClick={() => handleLeave(event)}>Leave</EventPopupButton>
+          <EventPopupButton onClick={onClose}>Close</EventPopupButton>
         </ButtonsContainer>
       </EventAlignContainer>
     </EventContainer>
@@ -361,11 +361,11 @@ const EventCalendar = () => {
       </div>
       <div style={{ flex: '1', backgroundColor: 'white' }}>
         <TitleContainer>
-          <Title>CREATE A RIDE</Title>
+          <Title>Create a Ride</Title>
         </TitleContainer>
         <CenterContainer>
           <Container>
-            <Label htmlFor="fromLocation">FROM:</Label>
+            <Label htmlFor="fromLocation">From:</Label>
             <StyledSelect id="fromLocation" value={fromLocation} onChange={handleFromChange}>
               {locationOptions.map((option) => (
                 <option key={option} value={option}>
@@ -373,7 +373,7 @@ const EventCalendar = () => {
                 </option>
               ))}
             </StyledSelect>
-            <Label htmlFor="toLocation">TO:</Label>
+            <Label htmlFor="toLocation">To:</Label>
             <StyledSelect id="toLocation" value={toLocation} onChange={handleToChange}>
               {locationOptions.map((option) => (
                 <option key={option} value={option}>
@@ -381,7 +381,7 @@ const EventCalendar = () => {
                 </option>
               ))}
             </StyledSelect>
-            <Label htmlFor="datePicker">WHEN:</Label>
+            <Label htmlFor="datePicker">When:</Label>
             <DatePickerStyled
               selected={selectedDate}
               onChange={handleDateChange}
@@ -397,7 +397,7 @@ const EventCalendar = () => {
           </Container>
         </CenterContainer>
         <ButtonsContainer>
-          <Button onClick={handleCreate}>CREATE</Button>
+          <Button onClick={handleCreate}>Create</Button>
         </ButtonsContainer>
         {showEvent && (<EventsPopup event={selectedEvent} onClose={() => setShowEvent(false)} />)}
       </div>

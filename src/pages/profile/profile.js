@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { Container, ProfileCard, ProfileImage, UserInfo, EditForm, Input, Textarea } from './styledProfiles';
+import { Container, ProfileCard, ProfileImage, UserInfo, EditForm, Input, Textarea, Label, Header, Button } from './styledProfiles';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-
-
-const SetupProfileMessage = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  min-height: 100vh;
-`;
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -163,24 +153,25 @@ return (
       </UserInfo>
     </ProfileCard>
 <EditForm>
-      {(!member || !member.name) && (
-        <div style={{ color: 'red' }}>Please finish setting up your profile!</div>
-      )}
-      <h2>Edit Profile</h2>
-      <label>
+      
+      <Header>Edit Profile</Header>
+      <Label>
         Name:
         <Input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} required />
-      </label>
-      <label>
+      </Label>
+      <Label>
         Username:
         <Input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-      </label>
-      <label>
+      </Label>
+      <Label>
         Bio:
         <Textarea placeholder="Enter your bio" rows="4" value={bio} onChange={(e) => setBio(e.target.value)} required />
-      </label>
+      </Label>
       <br />
-      <button onClick={handleSave}>Save</button>
+      <Button onClick={handleSave}>Save</Button>
+      {(!member || !member.name) && (
+        <div style={{ color: 'red', textAlign: 'center', fontFamily: 'Outfit' }}>Please finish setting up your profile!</div>
+      )}
       {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
     </EditForm>
   </Container>

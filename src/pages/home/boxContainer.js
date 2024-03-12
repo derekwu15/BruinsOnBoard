@@ -12,7 +12,7 @@ const Box = ({ imageUrl, buttonText, link, text }) => {
     <div className="box">
       <img src={imageUrl} alt={buttonText} />
       <br />
-      <div className="box-text">{text}</div> {/* This div holds the text */}
+      <div className="box-text">{text}</div>
       <br />
       <Link to={link}>
         <button>{buttonText}</button>
@@ -36,13 +36,26 @@ const BoxContainer = () => {
         imageUrl={ride}
         buttonText="Find a Ride"
         link={user ? '/rides' : '/login'}
-        text="Enter your destination and schedule to find fellow Bruins who are heading the same way"
+        text={
+          <>
+            <br />
+            Enter your destination and schedule to find fellow Bruins who are heading the same way
+            <br /><br />
+          </>
+        }
       />
       <Box
         imageUrl={profile}
         buttonText="Create a Profile"
         link={user ? '/profile' : '/signup'}
-        text="Create a Profile now to start connecting with other students!"
+        text=
+        {
+          <>
+            <br />
+              Create a Profile now to start connecting with other students!
+            <br /><br />
+          </>
+        }
       />
     </div>
   );

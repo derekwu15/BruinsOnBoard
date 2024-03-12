@@ -8,10 +8,11 @@
   }
   
   .box {
-    width: 200px; /* Adjust the width as needed */
-    height: 600px;
-    text-align: center; /* Centers the content */
-    margin: 10px; /* Adds space between the boxes */
+    width: 200px;
+    height: 500px;
+    text-align: center;
+    font-family: 'Outfit';
+    margin: 10px;
     max-width: 400px;
     width: 100%;
     padding: 20px;
@@ -21,25 +22,25 @@
   }
   
   .box img {
-    width: 100%; /* Makes the image fill the container */
-    height: auto; /* Keeps the image aspect ratio */
-    border-radius: 5px; /* Optional: rounds the corners of the image */
+    width: 100%;
+    height: auto;
   }
   
   .box button {
     width: 100%;
-    padding: 10px; /* Adds padding inside the button */
-    margin-top: 10px; /* Adds space between the image and the button */
-    cursor: pointer; /* Changes the cursor to signify it's clickable */
-    border: none; /* Removes the border */
-    border-radius: 5px; /* Rounds the corners of the button */
-    background-color: #031d39; /* Example button color, you can change this */
-    color: white; /* Text color */
-    font-size: 16px; /* Adjust the font size as needed */
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background-color: #031d39;
+    color: white; 
+    font-size: 16px;
     font-family: 'Outfit';
   }
   
   .box button:hover {
-    background-color: #0056b3; /* Darkens the button on hover for feedback */
+    background-color: #021326;
+    color: #ffc52d;
   }
   

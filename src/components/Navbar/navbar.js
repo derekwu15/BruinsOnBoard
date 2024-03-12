@@ -36,7 +36,7 @@ const Navbar = () => {
           )}
           {user && (
             <SearchButton to="/search" activeStyle>
-              Search Users
+              Members
             </SearchButton>
           )}
         </NavMenu>
@@ -48,7 +48,8 @@ const Navbar = () => {
                 <DropdownLink to="/profile" activeStyle>
                   Your Profile
                 </DropdownLink>
-                <DropdownLink as="LogoutButton" onClick={handleLogout} activeStyle>                  Log out
+                <DropdownLink as="LogoutButton" onClick={handleLogout} activeStyle>                  
+                  Log out
                 </DropdownLink>
               </DropdownMenu>
             </ProfileButton>
