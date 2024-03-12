@@ -1,6 +1,7 @@
 // StyledComponents.js
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
+import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
     display: flex;
@@ -147,4 +148,12 @@ export const TitleContainer = styled.div`
     display: flex;
     justify-content: center;
     margin-top: 5rem;
+`;
+export const MemberLink = styled(Link)`
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;

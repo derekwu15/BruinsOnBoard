@@ -4,9 +4,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
 import { jwtDecode } from 'jwt-decode';
-import { Container, EventContainer, EventAlignContainer, Title, Label, PopupLabel, PopupSubLabel, StyledSelect, DatePickerStyled, Button, EventPopupButton, ButtonsContainer, CenterContainer, TitleContainer } from './styledRides';
+import { Container, EventContainer, EventAlignContainer, MemberLink, Title, Label, PopupLabel, PopupSubLabel, StyledSelect, DatePickerStyled, Button, EventPopupButton, ButtonsContainer, CenterContainer, TitleContainer } from './styledRides';
 import { useNavigate } from 'react-router-dom';
-import ViewProfiles from '../profile/viewProfile'
 
 const localizer = momentLocalizer(moment);
 
@@ -16,7 +15,6 @@ const EventCalendar = () => {
   const [showEvent, setShowEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [member, setMember] = useState(null);
-  const displayName = []
   const handleEventClick = (event) => {
     setSelectedEvent(event);
     setShowEvent(true);
@@ -70,7 +68,7 @@ const EventCalendar = () => {
           if (!response.ok) {
             throw new Error('Failed to fetch member data');
           }
-  
+
           const memberData = await response.json();
           setMember(memberData);
         } catch (error) {
@@ -105,58 +103,12 @@ const EventCalendar = () => {
   };
 
   const handleJoin = async (event) => {
-
-    // console.log(member.user_id);
-
-    // try {
-    //   const userString = localStorage.getItem('user');
-    //   const user = JSON.parse(userString);
-    //   const token = user.token
-    //   const response = await fetch('http://localhost:4000/api/members/' + member.user_id, {
-    //     headers: {
-    //       'Authorization': 'Bearer ' + token
-    //     }
-    //   });
-    //   if (!response.ok) {
-    //     throw new Error('Failed to fetch profile data for ID: ' + member.user_id);
-    //   }
-    //   const memberData = await response.json();
-    //   displayName.push(memberData.name);
-    // } catch (error) {
-    //   console.error('Error fetching profile data:', error);
-    // }
-
-    // const memberEmails = [];
-    // try {
-    //   const userString = localStorage.getItem('user');
-    //   const user = JSON.parse(userString);
-    //   const token = user.token
-
-    //   for (const uid of event.members) {
-    //     const response = await fetch('http://localhost:4000/api/profiles/' + uid, {
-    //       headers: {
-    //         'Authorization': 'Bearer ' + token
-    //       }
-    //     });
-    //     if (!response.ok) {
-    //       throw new Error('Failed to fetch profile data for ID: ' + uid);
-    //     }
-    //     const memberData = await response.json();
-    //     memberEmails.push(memberData.email);
-    //     console.log("here are the" , memberEmails)
-    //   }
-    // } catch (error) {
-    //   console.error('Error fetching profile data:', error);
-    // }
-
-  
-
-    if (selectedEvent && selectedEvent.capacity >= 1 && !selectedEvent.members.includes(member.username)) {
+    if (selectedEvent && selectedEvent.capacity >= 1 && !selectedEvent.members.includes(`${member.username}:${member.user_id}`)) {
       try {
-        const newMember = member.username
+        const newMember = `${member.username}:${member.user_id}`;
         const updatedCapacity = selectedEvent.capacity - 1;
-        const updatedMembers = [...selectedEvent.members, newMember]; 
-        
+        const updatedMembers = [...selectedEvent.members, newMember];
+
         const response = await fetch(`http://localhost:4000/api/rides/${selectedEvent.id}`, {
           method: "PATCH",
           headers: {
@@ -167,25 +119,25 @@ const EventCalendar = () => {
             members: updatedMembers,
           }),
         });
-  
+
         if (!response.ok) throw new Error("Network response was not ok");
-  
+
         // Update the selected event with new capacity and members
         const updatedSelectedEvent = {
           ...selectedEvent,
           capacity: updatedCapacity,
           members: updatedMembers,
         };
-        
+
         setSelectedEvent(updatedSelectedEvent);
-  
+
         // Update the events array to reflect change
         setEvents((prevEvents) =>
           prevEvents.map((event) =>
             event.id === selectedEvent.id ? updatedSelectedEvent : event
           )
         );
-  
+
         console.log("Ride joined successfully");
       } catch (error) {
         console.error("Error joining the ride:", error);
@@ -193,56 +145,57 @@ const EventCalendar = () => {
     } else {
       console.log("Ride is at full capacity or selected event is not defined.");
     }
-}
+  }
 
-const handleLeave = async (event) => {
-  // Assuming 'member' contains the email or identifier of the member who wants to leave
-  if (selectedEvent && selectedEvent.members.includes(member.username)) {
-    try {
-      // Increase capacity by 1
-      const updatedCapacity = selectedEvent.capacity + 1;
-      
-      // Remove the specific member from the members array
-      const updatedMembers = selectedEvent.members.filter(m => m !== member.username);
+  const handleLeave = async (event) => {
+    const memberString = `${member.username}:${member.user_id}`;
 
-      const response = await fetch(`http://localhost:4000/api/rides/${selectedEvent.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    if (selectedEvent && selectedEvent.members.includes(memberString)) {
+      try {
+        // Increase capacity by 1
+        const updatedCapacity = selectedEvent.capacity + 1;
+
+        // Remove the specific member from the members array
+        const updatedMembers = selectedEvent.members.filter(m => m !== memberString);
+
+        const response = await fetch(`http://localhost:4000/api/rides/${selectedEvent.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            capacity: updatedCapacity,
+            members: updatedMembers,
+          }),
+        });
+
+        if (!response.ok) throw new Error("Network response was not ok");
+
+        // Update the selected event with the new capacity and members
+        const updatedSelectedEvent = {
+          ...selectedEvent,
           capacity: updatedCapacity,
           members: updatedMembers,
-        }),
-      });
+        };
 
-      if (!response.ok) throw new Error("Network response was not ok");
+        // Update the selected event in the state
+        setSelectedEvent(updatedSelectedEvent);
 
-      // Update the selected event with the new capacity and members
-      const updatedSelectedEvent = {
-        ...selectedEvent,
-        capacity: updatedCapacity,
-        members: updatedMembers,
-      };
+        // Update the events array in the state to reflect change
+        setEvents((prevEvents) =>
+          prevEvents.map((event) =>
+            event.id === selectedEvent.id ? updatedSelectedEvent : event
+          )
+        );
 
-      // Update the selected event in the state
-      setSelectedEvent(updatedSelectedEvent);
-
-      // Update the events array in the state to reflect change
-      setEvents((prevEvents) =>
-        prevEvents.map((event) =>
-          event.id === selectedEvent.id ? updatedSelectedEvent : event
-        )
-      );
-
-      console.log("Successfully left the ride");
-    } catch (error) {
-      console.error("Error leaving the ride:", error);
+        console.log("Successfully left the ride");
+      } catch (error) {
+        console.error("Error leaving the ride:", error);
+      }
+    } else {
+      console.log("Member is not part of this ride or selected event is not defined.");
     }
-  } else {
-    console.log("Member is not part of this ride or selected event is not defined.");
-  }
-};
+  };
 
   // stylized popup for ride information
   const EventsPopup = ({ event, onClose }) => (
@@ -252,7 +205,18 @@ const handleLeave = async (event) => {
         <PopupSubLabel>{moment(event.start).format('MMMM D, YYYY')}</PopupSubLabel>
         <PopupSubLabel>{moment(event.start).format('h:mm A')} - {moment(event.end).format('h:mm A')}</PopupSubLabel>
         <PopupSubLabel>capacity: {event.capacity} spot(s) left</PopupSubLabel>
-        <PopupSubLabel>members: {event.members.join(', ')}</PopupSubLabel>
+        <PopupSubLabel>
+          members:{' '}
+          {event.members.map((member, index) => {
+            const [username, userId] = member.split(':');
+            return (
+              <React.Fragment key={userId}>
+                <MemberLink to={`/viewprofile/${userId}`}>{username}</MemberLink>
+                {index !== event.members.length - 1 ? ', ' : ''}
+              </React.Fragment>
+            );
+          })}
+        </PopupSubLabel>
         <ButtonsContainer>
           <EventPopupButton onClick={() => handleJoin(event)}>JOIN</EventPopupButton>
           <EventPopupButton onClick={() => handleLeave(event)}>LEAVE</EventPopupButton>
@@ -322,9 +286,17 @@ const handleLeave = async (event) => {
 
   const [events, setEvents] = useState([]);
 
-useEffect(() => {
-  fetchData();
-}, [navigate]);
+  useEffect(() => {
+    fetchData();
+
+    const interval = setInterval(() => {
+      fetchData();
+    }, 10000);
+    return () => {
+      clearInterval(interval);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate]);
 
   return (
     <div style={{ display: 'flex', height: 600 }}>
