@@ -15,6 +15,7 @@ export const NavLink = styled(Link)`
   color: #ffffff;
   font-size: 16px;
   font-weight: 500;
+  font-family: 'Outfit';
   text-decoration: none;
   padding: 10px 20px;
   height: 100%;
@@ -36,13 +37,14 @@ export const LoginButton = styled(NavLink)`
   color: #000000;
   font-size: 16px;
   font-weight: 500;
+  font-family: 'Outfit';
   text-decoration: none;
   padding: 10px 20px;
   width: 70px;
   height: 15px;
   cursor: pointer;
   transition: background 0.3s ease, color 0.3s ease;
-  border-radius: 20px;
+  border-radius: 10px;
   text-align: center;
   line-height: 15px;
   &:hover,
@@ -67,7 +69,7 @@ export const DropdownMenu = styled.div`
   display: none;
   position: absolute;
   background-color: #f9f9f9;
-  background: #0172c0;
+  background: #031d39;
   min-width: 160px;
   padding: 12px 16px;
   z-index: 1;
@@ -104,9 +106,10 @@ export const DropdownLink = styled(Link)`
   height: 100%;
   cursor: pointer;
   display: block;
+  font-family: 'Outfit';
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #021326;
   }
 
   &:hover {

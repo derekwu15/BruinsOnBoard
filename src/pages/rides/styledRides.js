@@ -36,11 +36,10 @@ export const EventAlignContainer = styled.div`
 `;
 
 export const Title = styled.h1`
-    font-size: 3.2rem;
+    font-size: 3rem;
     margin-bottom: 0.6rem;
     margin-top: 0rem;
-    font-family: 'Playfair Display';
-    letter-spacing: -1px;
+    font-family: 'Outfit';
 `;
 
 export const Label = styled.label`
@@ -50,7 +49,7 @@ export const Label = styled.label`
     color: #262626;
     font-weight: bold;
     font-size: 1.2rem;
-    font-family: 'Raleway';
+    font-family: 'Outfit';
 `;
 
 export const PopupLabel = styled.label`
@@ -60,7 +59,7 @@ export const PopupLabel = styled.label`
     color: #262626;
     font-weight: bold;
     font-size: 2.5rem;
-    font-family: 'Raleway';
+    font-family: 'Outfit';
 `;
 
 export const PopupSubLabel = styled.label`
@@ -69,7 +68,7 @@ export const PopupSubLabel = styled.label`
     margin-bottom: 0.25rem;
     color: #262626;
     font-size: 1.5rem;
-    font-family: 'Raleway';
+    font-family: 'Outfit';
 `;
 
 export const StyledSelect = styled.select`
@@ -81,7 +80,7 @@ export const StyledSelect = styled.select`
     cursor: pointer;
     color: #333;
     font-size: 1.2rem;
-    font-family: 'Raleway';
+    font-family: 'Outfit';
 `;
 
 export const DatePickerStyled = styled(DatePicker)`
@@ -93,12 +92,11 @@ export const DatePickerStyled = styled(DatePicker)`
     cursor: pointer;
     color: #333;
     font-size: 1.2rem;
-    font-family: 'Raleway';
-    text-transform: uppercase;
+    font-family: 'Outfit';
 `;
 
 export const Button = styled.button`
-    background-color: #36454F;
+    background-color: #031d39;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -106,17 +104,18 @@ export const Button = styled.button`
     cursor: pointer;
     margin: 10px;
     font-size: 1.2rem;
-    font-family: 'Raleway';
+    font-family: 'Outfit';
     width: 275px;
     transition: background-color 0.3s;
 
     &:hover {
-        background-color: #2c3e50;
+        background-color: #021326;
+        color: #ffc52d;
     }
 `;
 
 export const EventPopupButton = styled.button`
-    background-color: #36454F;
+    background-color: #031d39;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -124,12 +123,13 @@ export const EventPopupButton = styled.button`
     cursor: pointer;
     margin: 10px;
     font-size: 1.2rem;
-    font-family: 'Raleway';
+    font-family: 'Outfit';
     width: 175px;
     transition: background-color 0.3s;
 
     &:hover {
-        background-color: #2c3e50;
+        background-color: #021326;
+        color: #ffc52d;
     }
 `;
 

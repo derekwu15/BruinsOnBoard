@@ -33,6 +33,7 @@ export const ProfileImage = styled.img`
 export const UserInfo = styled.div`
   padding: 20px;
   text-align: center;
+  font-family: 'Outfit';
 `;
 
 export const EditForm = styled.div`
@@ -49,6 +50,7 @@ export const Input = styled.input`
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-family: 'Outfit';
 `;
 
 export const Textarea = styled.textarea`
@@ -58,4 +60,32 @@ export const Textarea = styled.textarea`
   border: 1px solid #ccc;
   border-radius: 4px;
   resize: vertical;
+  font-family: 'Outfit';
+`;
+
+export const Label =  styled.label `
+  font-family: 'Outfit';
+`;
+
+export const Header = styled.h2 `
+  font-family: 'Outfit';
+`;
+
+export const Button = styled.button`
+  justfy-align: center;
+  width: 100%;
+  background-color: #031d39;
+  color: #fff;
+  padding: 12px;
+  font-family: 'Outfit';
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #021326;
+    color: #ffc52d;
+  }
 `;

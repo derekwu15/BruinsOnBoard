@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import './home.css'; // Make sure your CSS file is imported
+import './home.css';
 import BoxContainer from './boxContainer';
 
 const Home = () => {
