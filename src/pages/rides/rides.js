@@ -107,6 +107,27 @@ const EventCalendar = () => {
     }
   };
 
+  const fetchEmail = async (userId) => {
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    const token = user.token;
+    try {
+        const response = await fetch(`http://localhost:4000/api/profiles/${userId}`, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch email for user');
+        }
+        const userData = await response.json();
+        return userData.email;
+    } catch (error) {
+        console.error('Error fetching email:', error);
+        return null;
+    }
+  };
+
   const handleJoin = async (event) => {
     if (selectedEvent && selectedEvent.capacity >= 1 && !selectedEvent.members.includes(`${member.username}:${member.user_id}`)) {
       try {
@@ -144,6 +165,28 @@ const EventCalendar = () => {
         );
 
         console.log("Ride joined successfully");
+        // Extract usernames from each member string
+        const usernames = selectedEvent.members.map(memberString => {
+          const [username] = memberString.split(':');
+          return username;
+        });
+        usernames.push(member.username);
+        selectedEvent.members.forEach(async memberString => {
+          // Extract username and user ID from the member string
+          const [username, userId] = memberString.split(':');
+          // Fetch the email for the user ID
+          const email = await fetchEmail(userId);
+      
+          // Call sendEmail if email is retrieved successfully
+          if (email) {
+              sendEmail(email, selectedEvent.title, selectedEvent.start, selectedEvent.end, usernames);
+          } else {
+              console.error(`Failed to fetch email for user ${username}`);
+          }
+        });
+        const currentEmail = await fetchEmail(member.user_id);
+        sendEmail(currentEmail, selectedEvent.title, selectedEvent.start, selectedEvent.end, usernames);      
+
       } catch (error) {
         console.error("Error joining the ride:", error);
       }
