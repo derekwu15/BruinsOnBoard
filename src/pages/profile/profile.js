@@ -2,127 +2,138 @@ import React, { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { Container, ProfileCard, ProfileImage, UserInfo, EditForm, Input, Textarea } from './styledProfiles';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from "../../hooks/useAuthContext";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const { user } = useAuthContext();
-
   const [member, setMember] = useState(null);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-  const fetchData = async () => {
-    const userString = localStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : null;
+    const fetchData = async () => {
+      const userString = localStorage.getItem('user');
+      const user = userString ? JSON.parse(userString) : null;
 
-    if (!user) {
-      console.error('JWT token not found in local storage');
-      navigate('/login');
+      if (!user) {
+        console.error('JWT token not found in local storage');
+        navigate('/login');
+        return;
+      }
+
+      const token = user.token;
+
+      if (token) {
+        try {
+          const userId = jwtDecode(token);
+
+          const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
+            headers: {
+              'Authorization': 'Bearer ' + token
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch member data');
+          }
+
+          const memberData = await response.json();
+          setMember(memberData);
+          setName(memberData.name || '');
+          setUsername(memberData.username || '');
+          setBio(memberData.bio || '');
+
+          const profileResponse = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
+            headers: {
+              'Authorization': 'Bearer ' + token
+            }
+          });
+
+          if (!profileResponse.ok) {
+            throw new Error('Failed to fetch profile data');
+          }
+
+          const profileData = await profileResponse.json();
+          setEmail(profileData.email);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      } else {
+        console.error('JWT token not found in local storage');
+      }
+    };
+
+    fetchData();
+  }, [navigate]);
+
+  const handleSave = async () => {
+    // Check if all required fields are filled out
+    if (!name || !username || !bio) {
+      setErrorMessage('Please fill out all required fields');
       return;
     }
 
+    // Reset error message
+    setErrorMessage('');
+
+    const userString = localStorage.getItem('user');
+    const user = JSON.parse(userString);
     const token = user.token;
+    const userId = jwtDecode(token);
+    const profileData = { name, username, bio, uid: userId._id };
 
-    if (token) {
-      try {
-        const userId = jwtDecode(token);
+    try {
+      const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(profileData)
+      });
 
-        const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        });
+      if (!response.ok) {
+        throw new Error('Failed to save profile');
+      }
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch member data');
+      // Fetch the updated member and profile data
+      const updatedMemberResponse = await fetch('http://localhost:4000/api/members/' + userId._id, {
+        headers: {
+          'Authorization': 'Bearer ' + token
         }
+      });
 
-        const memberData = await response.json();
-        setMember(memberData);
+      if (!updatedMemberResponse.ok) {
+        throw new Error('Failed to fetch updated member data');
+      }
 
-        const profileResponse = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        });
+      const updatedMemberData = await updatedMemberResponse.json();
+      setMember(updatedMemberData);
 
-        if (!profileResponse.ok) {
-          throw new Error('Failed to fetch profile data');
+      const updatedProfileResponse = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
+        headers: {
+          'Authorization': 'Bearer ' + token
         }
+      });
 
-        const profileData = await profileResponse.json();
-        setEmail(profileData.email);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      if (!updatedProfileResponse.ok) {
+        throw new Error('Failed to fetch updated profile data');
       }
-    } else {
-      console.error('JWT token not found in local storage');
+
+      const updatedProfileData = await updatedProfileResponse.json();
+      setEmail(updatedProfileData.email);
+
+      // Optionally, handle success response
+      console.log('Profile saved successfully');
+      navigate('/profile', { replace: true }); // Navigate to /profile and replace the current history entry
+    } catch (error) {
+      console.error('Error saving profile:', error.message);
     }
-  };
-
-  fetchData();
-}, [navigate]);
-
-  const handleSave = async () => {
-  const userString = localStorage.getItem('user');
-  const user = JSON.parse(userString);
-  const token = user.token;
-  const userId = jwtDecode(token);
-  const profileData = { name, username, bio, uid: userId._id };
-
-  try {
-    const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(profileData)
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to save profile');
-    }
-
-    // Fetch the updated member and profile data
-    const updatedMemberResponse = await fetch('http://localhost:4000/api/members/' + userId._id, {
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    });
-
-    if (!updatedMemberResponse.ok) {
-      throw new Error('Failed to fetch updated member data');
-    }
-
-    const updatedMemberData = await updatedMemberResponse.json();
-    setMember(updatedMemberData);
-
-    const updatedProfileResponse = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    });
-
-    if (!updatedProfileResponse.ok) {
-      throw new Error('Failed to fetch updated profile data');
-    }
-
-    const updatedProfileData = await updatedProfileResponse.json();
-    setEmail(updatedProfileData.email);
-
-    // Optionally, handle success response
-    console.log('Profile saved successfully');
-    navigate('/profile', { replace: true }); // Navigate to /profile and replace the current history entry
-  } catch (error) {
-    console.error('Error saving profile:', error.message);
   }
-}
-    return (
+
+  return (
     <Container>
       <ProfileCard>
         <ProfileImage
@@ -146,18 +157,19 @@ const ProfilePage = () => {
         <h2>Edit Profile</h2>
         <label>
           Name:
-          <Input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} />
+          <Input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} required />
         </label>
         <label>
           Username:
-          <Input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} />
+          <Input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} required />
         </label>
         <label>
           Bio:
-          <Textarea placeholder="Enter your bio" rows="4" value={bio} onChange={(e) => setBio(e.target.value)}></Textarea>
+          <Textarea placeholder="Enter your bio" rows="4" value={bio} onChange={(e) => setBio(e.target.value)} required />
         </label>
         <br />
         <button onClick={handleSave}>Save</button>
+        {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
       </EditForm>
     </Container>
   );
