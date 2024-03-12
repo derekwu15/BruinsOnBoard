@@ -71,6 +71,11 @@ const EventCalendar = () => {
 
           const memberData = await response.json();
           setMember(memberData);
+
+          if (!memberData.username) {
+            navigate('/profile');
+          }
+
         } catch (error) {
           console.error('Error fetching member data:', error);
         }
