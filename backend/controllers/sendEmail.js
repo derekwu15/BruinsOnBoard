@@ -14,10 +14,10 @@ function sendEmail({ email, title, start, end, displayName }) {
     const mail_configs = {
       from: "bruinsonboard@gmail.com",
       to: email,
-      subject: "BruinsOnBoard: Ride confirmation",
+      subject: "BruinsOnBoard: Ride information",
       html:
         '<div style="font-family: Arial, sans-serif; color: #333;">' +
-        '<h1 style="color: #0055a5;">You have joined a ride!</h1>' +
+        '<h1 style="color: #0055a5;">Your ride has been updated!</h1>' +
         '<p>Ride Group Details:</p>' +
         '<ul>' +
         '<li><strong>Title:</strong>' + title + '</li>' +
