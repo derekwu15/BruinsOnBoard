@@ -17,8 +17,8 @@ const AboutPage = () => {
       <List>
         <ListItem><BoldText>Sign Up:</BoldText> Create your profile using your UCLA email to ensure a trusted network of students.</ListItem>
         <ListItem><BoldText>Plan Your Ride:</BoldText> Enter your destination and schedule to find fellow Bruins who are heading the same way.</ListItem>
-        <ListItem><BoldText>Connect:</BoldText> Choose who you’d like to ride with based on profiles, reviews, and preferred sharing options.</ListItem>
-        <ListItem><BoldText>Share and Save:</BoldText> Meet up, enjoy the company of a new friend, and split the fare directly through the app.</ListItem>
+        <ListItem><BoldText>Connect:</BoldText> Choose who you’d like to ride with based on profiles.</ListItem>
+        <ListItem><BoldText>Share and Save:</BoldText> Meet up, enjoy the company of a new friend, and split the fare.</ListItem>
       </List>
       <SubHeading>Safety First</SubHeading>
       <Paragraph>
