@@ -156,10 +156,11 @@ const EventCalendar = () => {
     // console.log(event.capacity)
     // console.log(event.members)
 
-    if (selectedEvent && selectedEvent.capacity >= 1) {
+    if (selectedEvent && selectedEvent.capacity >= 1 && !selectedEvent.members.includes(member.username)) {
       try {
+        const newMember = member.username
         const updatedCapacity = selectedEvent.capacity - 1;
-        const updatedMembers = [...selectedEvent.members, "newMember@example.com"]; // Adjust the new member value accordingly
+        const updatedMembers = [...selectedEvent.members, newMember]; 
         
         const response = await fetch(`http://localhost:4000/api/rides/${selectedEvent.id}`, {
           method: "PATCH",
@@ -183,7 +184,7 @@ const EventCalendar = () => {
         
         setSelectedEvent(updatedSelectedEvent);
   
-        // Update the events array to reflect this change
+        // Update the events array to reflect change
         setEvents((prevEvents) =>
           prevEvents.map((event) =>
             event.id === selectedEvent.id ? updatedSelectedEvent : event
@@ -197,8 +198,56 @@ const EventCalendar = () => {
     } else {
       console.log("Ride is at full capacity or selected event is not defined.");
     }
-
 }
+
+const handleLeave = async (event) => {
+  // Assuming 'member' contains the email or identifier of the member who wants to leave
+  if (selectedEvent && selectedEvent.members.includes(member.username)) {
+    try {
+      // Increase capacity by 1
+      const updatedCapacity = selectedEvent.capacity + 1;
+      
+      // Remove the specific member from the members array
+      const updatedMembers = selectedEvent.members.filter(m => m !== member.username);
+
+      const response = await fetch(`http://localhost:4000/api/rides/${selectedEvent.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          capacity: updatedCapacity,
+          members: updatedMembers,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      // Update the selected event with the new capacity and members
+      const updatedSelectedEvent = {
+        ...selectedEvent,
+        capacity: updatedCapacity,
+        members: updatedMembers,
+      };
+
+      // Update the selected event in the state
+      setSelectedEvent(updatedSelectedEvent);
+
+      // Update the events array in the state to reflect change
+      setEvents((prevEvents) =>
+        prevEvents.map((event) =>
+          event.id === selectedEvent.id ? updatedSelectedEvent : event
+        )
+      );
+
+      console.log("Successfully left the ride");
+    } catch (error) {
+      console.error("Error leaving the ride:", error);
+    }
+  } else {
+    console.log("Member is not part of this ride or selected event is not defined.");
+  }
+};
 
   // stylized popup for ride information
   const EventsPopup = ({ event, onClose }) => (
@@ -211,6 +260,7 @@ const EventCalendar = () => {
         <PopupSubLabel>members: {event.members.join(', ')}</PopupSubLabel>
         <ButtonsContainer>
           <EventPopupButton onClick={() => handleJoin(event)}>JOIN</EventPopupButton>
+          <EventPopupButton onClick={() => handleLeave(event)}>LEAVE</EventPopupButton>
           <EventPopupButton onClick={onClose}>CLOSE</EventPopupButton>
         </ButtonsContainer>
       </EventAlignContainer>
