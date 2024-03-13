@@ -407,18 +407,11 @@ const EventCalendar = () => {
         throw new Error("Network response was not ok");
       }
 
-      // await fetchData();
 
     } catch (error) {
       console.error("Failed to create or select the ride", error);
     }
 
-    // console.log("Ride created successfully");
-
-    // await fetchData();
-    // console.log(selectedEvent)
-    // const currentEmail = await fetchEmail(decoded._id);
-    // await sendEmail(currentEmail, selectedEvent.title, selectedEvent.start, selectedEvent.end, username);  
   }
 
   const [events, setEvents] = useState([]);
