@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 
 const memberSchema = new Schema({
   username: {
-    type: String,
+    type: String
   },
   name: {
     type: String,
