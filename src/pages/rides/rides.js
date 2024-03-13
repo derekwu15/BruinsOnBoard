@@ -395,9 +395,12 @@ const EventCalendar = () => {
       console.log("Ride created successfully", eventData);
       await fetchData(); // Refresh data after setting the event
 
-      console.log(selectedEvent); // This might still log the old value due to state update batching
+      console.log('test2' + eventData); // This might still log the old value due to state update batching
+      const title = eventData.from.toUpperCase() + " TO " + eventData.to.toUpperCase();
+      const start = moment(eventData.date + ' ' + eventData.time, 'MMMM DD, YYYY h:mm A').toDate();
+      const end = moment(start).add(30, 'minutes').toDate();
       const currentEmail = await fetchEmail(decoded._id);
-      await sendEmail(currentEmail, eventData.title, eventData.start, eventData.end, username); // Use eventData directly
+      await sendEmail(currentEmail, title, start, end, username); // Use eventData directly
   
 
       if (!response.ok) {
