@@ -390,29 +390,32 @@ const EventCalendar = () => {
         body: JSON.stringify({ to, from, date, time, capacity, members })
       });
 
+      const eventData = await response.json(); // Await here to ensure the promise resolves
+      setSelectedEvent(eventData); // Assuming setSelectedEvent updates state or context
+      console.log("Ride created successfully", eventData);
+      await fetchData(); // Refresh data after setting the event
+
+      console.log(selectedEvent); // This might still log the old value due to state update batching
+      const currentEmail = await fetchEmail(decoded._id);
+      await sendEmail(currentEmail, eventData.title, eventData.start, eventData.end, username); // Use eventData directly
+  
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
 
-      await fetchData();
+      // await fetchData();
 
     } catch (error) {
       console.error("Failed to create or select the ride", error);
     }
 
-    console.log("Ride created successfully");
+    // console.log("Ride created successfully");
 
-    fetchData();
-    const currentEmail = await fetchEmail(decoded._id);
-    sendEmail(currentEmail, selectedEvent.title, selectedEvent.start, selectedEvent.end, username);  
-
-    // const eventDate = moment(selectedEvent.date + ' ' + selectedEvent.time, 'MMMM DD, YYYY h:mm A').toDate();
-    // const eventDuration = 30 * 60 * 1000;
-    // selectedEvent.title =`${selectedEvent.from.toUpperCase()} TO ${selectedEvent.to.toUpperCase()}`
-    // selectedEvent.start = eventDate
-    // selectedEvent.end = new Date(eventDate.getTime() + eventDuration)
+    // await fetchData();
+    // console.log(selectedEvent)
     // const currentEmail = await fetchEmail(decoded._id);
-    // sendEmail(currentEmail, selectedEvent.title, selectedEvent.start, selectedEvent.end, username);   
+    // await sendEmail(currentEmail, selectedEvent.title, selectedEvent.start, selectedEvent.end, username);  
   }
 
   const [events, setEvents] = useState([]);
