@@ -9,21 +9,64 @@ const MemberSearch = () => {
   const [members, setMembers] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [filteredMembers, setFilteredMembers] = useState([]);
+  // eslint-disable-next-line
   const [member, setMember] = useState(null);
 
-  const fetchMemberData = async () => {
-    const userString = localStorage.getItem('user');
-
-    const user = userString ? JSON.parse(userString) : null;
-    const token = user.token;
-    if (token) {
+  useEffect(() => {
+    const fetchData = async () => {
       try {
+        const userString = localStorage.getItem('user');
+        if (!userString) {
+          console.error('User not found in local storage');
+          navigate('/login');
+          return;
+        }
+
+        const user = JSON.parse(userString);
+        const token = user.token;
+
+        const response = await fetch('http://localhost:4000/api/members/', {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch member data');
+        }
+
+        const memberData = await response.json();
+        setMembers(memberData);
+        setMember(user);
+      } catch (error) {
+        console.error('Error fetching member data:', error);
+      }
+    };
+
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate]);
+
+  useEffect(() => {
+    const fetchMemberData = async () => {
+      try {
+        const userString = localStorage.getItem('user');
+        if (!userString) {
+          console.error('User not found in local storage');
+          navigate('/login');
+          return;
+        }
+
+        const user = JSON.parse(userString);
+        const token = user.token;
+
         const userId = jwtDecode(token);
         const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
           headers: {
             'Authorization': 'Bearer ' + token
           }
         });
+
         if (!response.ok) {
           throw new Error('Failed to fetch member data');
         }
@@ -34,54 +77,14 @@ const MemberSearch = () => {
         if (!memberData.username) {
           navigate('/profile');
         }
-
       } catch (error) {
         console.error('Error fetching member data:', error);
       }
-    } else {
-      console.error('JWT token not found in local storage');
-    }
-  };
-  fetchMemberData();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const userString = localStorage.getItem('user');
-      const user = userString ? JSON.parse(userString) : null;
-
-      if (!user) {
-        console.error('JWT token not found in local storage');
-        navigate('/login');
-        return;
-      }
-
-      const token = user.token;
-
-      if (token) {
-        try {
-          const response = await fetch('http://localhost:4000/api/members/', {
-            headers: {
-              'Authorization': 'Bearer ' + token
-            }
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to fetch member data');
-          }
-
-          const memberData = await response.json();
-          setMembers(memberData);
-          setMember(user);
-        } catch (error) {
-          console.error('Error fetching member data:', error);
-        }
-      } else {
-        console.error('JWT token not found in local storage');
-      }
     };
 
-    fetchData();
-  }, [navigate]);
+    fetchMemberData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // empty dependency array to run only once when component mounts
 
   useEffect(() => {
     const filtered = members.filter((member) =>
