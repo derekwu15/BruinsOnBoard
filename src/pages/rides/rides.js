@@ -50,9 +50,29 @@ const EventCalendar = () => {
       });
 
       setEvents(formattedData);
+      console.log("data formatted")
     } catch (error) {
       console.error('Error fetching events:', error);
     }
+
+    // Delete rides from yesterday and beyond
+    const yesterday = moment().subtract(1, 'days').endOf('day'); // get yesterday's date and set time to end of day
+    const ridesToDelete = events.filter(event => moment(event.start).isBefore(yesterday));
+
+    await Promise.all(ridesToDelete.map(async (event) => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/rides/${event.id}`, {
+          method: 'DELETE',
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) throw new Error('Failed to delete ride');
+        console.log(`Ride with id ${event.id} deleted successfully`);
+      } catch (error) {
+        console.error(`Error deleting ride with id ${event.id}:`, error);
+      }
+    }));
 
     const fetchMemberData = async () => {
       const user = userString ? JSON.parse(userString) : null;
@@ -237,12 +257,14 @@ const EventCalendar = () => {
         );
 
         console.log("Successfully left the ride");
+
       } catch (error) {
         console.error("Error leaving the ride:", error);
       }
     } else {
       console.log("Member is not part of this ride or selected event is not defined.");
     }
+
   };
 
   // stylized popup for ride information
@@ -301,6 +323,8 @@ const EventCalendar = () => {
   const minTime = isToday ? new Date() : new Date().setHours(0, 0, 0, 0);
 
   // create -> sends data to backend -> calendar takes data from back and displays event
+  const [newRideId, setNewRideId] = useState(null);
+
   const handleCreate = async (e) => {
     e.preventDefault();
 
@@ -325,17 +349,41 @@ const EventCalendar = () => {
         throw new Error("Network response was not ok");
       }
 
-      console.log("Ride created successfully");
-      fetchData()
+         // Parse the JSON response body
+      const createdRideData = await response.json();
+      // setNewRideId(createdRideData._id); // Save the ID of the newly created ride
+      // // Assuming 'fetchData' asynchronously fetches and formats all rides, including the newly created one
+      await fetchData();
+
+      // Find the newly created ride in the list of all formatted rides by its ID
+      // console.log("Here is the createdRideData._id", createdRideData._id)
+      // console.log("Here is the formatted ID for all rides", events )
+      // const selectedRide = events.find(event => event.id === createdRideData._id);
+      // console.log(selectedRide)
+
+      // if (selectedRide) {
+      //   setSelectedEvent(selectedRide); // Set the found ride as the selected event
+      //   console.log("Ride created and selected successfully", selectedRide);
+      //   handleJoin(selectedRide); // Assuming you want to handle join for the selected ride
+      // } else {
+      //   console.log("Newly created ride not found in the fetched data");
+      // }
     } catch (error) {
-      console.error("Invalid", error);
+      console.error("Failed to create or select the ride", error);
     }
+
+    console.log("Ride created successfully");
+      // handleJoin(e);
+    // } catch (error) {
+    //   console.error("Invalid", error);
+    // }
   }
 
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
     fetchData();
+
 
     const interval = setInterval(() => {
       fetchData();
