@@ -30,6 +30,7 @@ function App() {
         <Route path="/rides" element={<RidesFind />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/about" element={<About />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
