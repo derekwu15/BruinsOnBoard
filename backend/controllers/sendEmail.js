@@ -20,7 +20,7 @@ function sendEmail({ email, title, start, end, displayName }) {
         '<h1 style="color: #0055a5;">Your ride has been updated!</h1>' +
         '<p>Ride Group Details:</p>' +
         '<ul>' +
-        '<li><strong>Title:</strong>' + title + '</li>' +
+        '<li><strong>Title:</strong> ' + title + '</li>' +
         '<li><strong>Start:</strong>' + start + ' ' + '</li>' +
         '<li><strong>End:</strong>' + end + ' ' + '</li>' +
         '<li><strong>Group Members:</strong></li>' + displayName + ' ' +
