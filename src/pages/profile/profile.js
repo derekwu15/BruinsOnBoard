@@ -79,98 +79,98 @@ const ProfilePage = () => {
     };
 
     fetchData();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
- const handleSave = async () => {
-  if (!name || !username || !bio) {
-    setErrorMessage('Please fill out all required fields');
-    return;
-  }
-
-  setErrorMessage('');
-
-  const userString = localStorage.getItem('user');
-  const user = JSON.parse(userString);
-  const token = user.token;
-  const userId = jwtDecode(token);
-
-  const isUsernameChanged = member.username !== username;
-
-  let existingUser;
-
-  if (isUsernameChanged) {
-    existingUser = allMembers.find(
-      (member) => member.username === username && member._id !== userId._id
-    );
-  }
-
-  if (isUsernameChanged && existingUser) {
-    setErrorMessage('Username already taken. Please choose a different username.');
-    return;
-  }
-
-  const profileData = { name, username, bio, uid: userId._id };
-
-  try {
-    const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(profileData)
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to save profile');
+  const handleSave = async () => {
+    if (!name || !username || !bio) {
+      setErrorMessage('Please fill out all required fields');
+      return;
     }
 
-    const updatedMemberResponse = await fetch('http://localhost:4000/api/members/' + userId._id, {
-      headers: {
-        'Authorization': 'Bearer ' + token
+    setErrorMessage('');
+
+    const userString = localStorage.getItem('user');
+    const user = JSON.parse(userString);
+    const token = user.token;
+    const userId = jwtDecode(token);
+
+    const isUsernameChanged = member.username !== username;
+
+    let existingUser;
+
+    if (isUsernameChanged) {
+      existingUser = allMembers.find(
+        (member) => member.username === username && member._id !== userId._id
+      );
+    }
+
+    if (isUsernameChanged && existingUser) {
+      setErrorMessage('Username already taken. Please choose a different username.');
+      return;
+    }
+
+    const profileData = { name, username, bio, uid: userId._id };
+
+    try {
+      const response = await fetch('http://localhost:4000/api/members/' + userId._id, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(profileData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save profile');
       }
-    });
 
-    if (!updatedMemberResponse.ok) {
-      throw new Error('Failed to fetch updated member data');
-    }
+      const updatedMemberResponse = await fetch('http://localhost:4000/api/members/' + userId._id, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
 
-    const updatedMemberData = await updatedMemberResponse.json();
-    setMember(updatedMemberData);
-
-    const updatedProfileResponse = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
-      headers: {
-        'Authorization': 'Bearer ' + token
+      if (!updatedMemberResponse.ok) {
+        throw new Error('Failed to fetch updated member data');
       }
-    });
 
-    if (!updatedProfileResponse.ok) {
-      throw new Error('Failed to fetch updated profile data');
-    }
+      const updatedMemberData = await updatedMemberResponse.json();
+      setMember(updatedMemberData);
 
-    const updatedProfileData = await updatedProfileResponse.json();
-    setEmail(updatedProfileData.email);
+      const updatedProfileResponse = await fetch('http://localhost:4000/api/profiles/' + userId._id, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
 
-    const allMembersResponse = await fetch('http://localhost:4000/api/members/', {
-      headers: {
-        'Authorization': 'Bearer ' + token
+      if (!updatedProfileResponse.ok) {
+        throw new Error('Failed to fetch updated profile data');
       }
-    });
 
-    if (!allMembersResponse.ok) {
-      throw new Error('Failed to fetch all members');
+      const updatedProfileData = await updatedProfileResponse.json();
+      setEmail(updatedProfileData.email);
+
+      const allMembersResponse = await fetch('http://localhost:4000/api/members/', {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
+
+      if (!allMembersResponse.ok) {
+        throw new Error('Failed to fetch all members');
+      }
+
+      const updatedAllMembersData = await allMembersResponse.json();
+      setAllMembers(updatedAllMembersData);
+
+      console.log('Profile saved successfully');
+      navigate('/profile', { replace: true });
+    } catch (error) {
+      console.error('Error saving profile:', error.message);
     }
-
-    const updatedAllMembersData = await allMembersResponse.json();
-    setAllMembers(updatedAllMembersData);
-
-    console.log('Profile saved successfully');
-    navigate('/profile', { replace: true });
-  } catch (error) {
-    console.error('Error saving profile:', error.message);
   }
-}
   return (
     <Container>
       <ProfileCard>
