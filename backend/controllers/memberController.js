@@ -80,7 +80,7 @@ const deleteMember = async (req, res) => {
 
 const updateMember = async (req, res) => {
   const { id } = req.params
-  console.log(id)
+  //console.log(id)
 
   const member = await Member.findOneAndUpdate({ user_id: id }, {
     ...req.body
