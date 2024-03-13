@@ -47,7 +47,7 @@ const deleteRide = async (req, res) => {
     return res.status(404).json({ error: 'No such Ride' })
   }
 
-  const ride = await Ride.findOneandDelete({ _id: id })
+  const ride = await Ride.findOneAndDelete({ _id: id })
 
   if (!ride) {
     return res.status(404).json({ error: "No such ride" })

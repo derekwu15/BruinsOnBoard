@@ -258,6 +258,23 @@ const EventCalendar = () => {
 
         console.log("Successfully left the ride");
 
+        if (updatedCapacity === 4){
+          try{
+            const response = await fetch(`http://localhost:4000/api/rides/${selectedEvent.id}`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              });
+              if (response.ok){
+                console.log("Ride deleted successfully");
+                await fetchData();
+              }
+          } catch (error){
+            console.error("Error updating ride capacity:", error);
+          }
+        }
+
       } catch (error) {
         console.error("Error leaving the ride:", error);
       }
@@ -266,6 +283,30 @@ const EventCalendar = () => {
     }
 
   };
+
+  const getUsername = async () => {
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    const token = user.token;
+    const decoded = jwtDecode(token);
+    const decodedID = decoded._id
+    try {
+      const response = await fetch(`http://localhost:4000/api/members/${decodedID}`, {
+          headers: {
+              'Authorization': 'Bearer ' + token
+          }
+      });
+      if (!response.ok) {
+          throw new Error('Failed to fetch email for user');
+      }
+      const userData = await response.json();
+      console.log(userData)
+      return userData.username;
+    } catch (error) {
+      console.error('Error fetching email:', error);
+      return null;
+    }
+  }
 
   // stylized popup for ride information
   const EventsPopup = ({ event, onClose }) => (
@@ -323,7 +364,6 @@ const EventCalendar = () => {
   const minTime = isToday ? new Date() : new Date().setHours(0, 0, 0, 0);
 
   // create -> sends data to backend -> calendar takes data from back and displays event
-  const [newRideId, setNewRideId] = useState(null);
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -333,8 +373,13 @@ const EventCalendar = () => {
     const date = moment(selectedDate).format('MMMM D, YYYY');
     const time = moment(selectedDate.getTime()).format('h:mm A');
 
-    const members = [];
-    const capacity = 4;
+    const username = await getUsername();
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    const token = user.token;
+    const decoded = jwtDecode(token);
+    const members = [username + ':' + decoded._id];
+    const capacity = 3;
 
     try {
       const response = await fetch("http://localhost:4000/api/rides/", {
@@ -349,34 +394,25 @@ const EventCalendar = () => {
         throw new Error("Network response was not ok");
       }
 
-         // Parse the JSON response body
-      const createdRideData = await response.json();
-      // setNewRideId(createdRideData._id); // Save the ID of the newly created ride
-      // // Assuming 'fetchData' asynchronously fetches and formats all rides, including the newly created one
       await fetchData();
 
-      // Find the newly created ride in the list of all formatted rides by its ID
-      // console.log("Here is the createdRideData._id", createdRideData._id)
-      // console.log("Here is the formatted ID for all rides", events )
-      // const selectedRide = events.find(event => event.id === createdRideData._id);
-      // console.log(selectedRide)
-
-      // if (selectedRide) {
-      //   setSelectedEvent(selectedRide); // Set the found ride as the selected event
-      //   console.log("Ride created and selected successfully", selectedRide);
-      //   handleJoin(selectedRide); // Assuming you want to handle join for the selected ride
-      // } else {
-      //   console.log("Newly created ride not found in the fetched data");
-      // }
     } catch (error) {
       console.error("Failed to create or select the ride", error);
     }
 
     console.log("Ride created successfully");
-      // handleJoin(e);
-    // } catch (error) {
-    //   console.error("Invalid", error);
-    // }
+
+    fetchData();
+    const currentEmail = await fetchEmail(decoded._id);
+    sendEmail(currentEmail, selectedEvent.title, selectedEvent.start, selectedEvent.end, username);  
+
+    // const eventDate = moment(selectedEvent.date + ' ' + selectedEvent.time, 'MMMM DD, YYYY h:mm A').toDate();
+    // const eventDuration = 30 * 60 * 1000;
+    // selectedEvent.title =`${selectedEvent.from.toUpperCase()} TO ${selectedEvent.to.toUpperCase()}`
+    // selectedEvent.start = eventDate
+    // selectedEvent.end = new Date(eventDate.getTime() + eventDuration)
+    // const currentEmail = await fetchEmail(decoded._id);
+    // sendEmail(currentEmail, selectedEvent.title, selectedEvent.start, selectedEvent.end, username);   
   }
 
   const [events, setEvents] = useState([]);

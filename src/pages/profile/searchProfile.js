@@ -86,7 +86,8 @@ const MemberSearch = () => {
   useEffect(() => {
     const filtered = members.filter((member) =>
       member.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-      member.username.toLowerCase().includes(searchInput.toLowerCase())
+      member.username.toLowerCase().includes(searchInput.toLowerCase()) ||
+      member.bio.toLowerCase().includes(searchInput.toLowerCase())
     );
     setFilteredMembers(filtered);
   }, [searchInput, members]);
