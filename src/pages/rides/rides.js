@@ -132,19 +132,19 @@ const EventCalendar = () => {
     const user = userString ? JSON.parse(userString) : null;
     const token = user.token;
     try {
-        const response = await fetch(`http://localhost:4000/api/profiles/${userId}`, {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Failed to fetch email for user');
+      const response = await fetch(`http://localhost:4000/api/profiles/${userId}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token
         }
-        const userData = await response.json();
-        return userData.email;
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch email for user');
+      }
+      const userData = await response.json();
+      return userData.email;
     } catch (error) {
-        console.error('Error fetching email:', error);
-        return null;
+      console.error('Error fetching email:', error);
+      return null;
     }
   };
 
@@ -196,16 +196,16 @@ const EventCalendar = () => {
           const [username, userId] = memberString.split(':');
           // Fetch the email for the user ID
           const email = await fetchEmail(userId);
-      
+
           // Call sendEmail if email is retrieved successfully
           if (email) {
-              sendEmail(email, selectedEvent.title, selectedEvent.start, selectedEvent.end, usernames);
+            sendEmail(email, selectedEvent.title, selectedEvent.start, selectedEvent.end, usernames);
           } else {
-              console.error(`Failed to fetch email for user ${username}`);
+            console.error(`Failed to fetch email for user ${username}`);
           }
         });
         const currentEmail = await fetchEmail(member.user_id);
-        sendEmail(currentEmail, selectedEvent.title, selectedEvent.start, selectedEvent.end, usernames);      
+        sendEmail(currentEmail, selectedEvent.title, selectedEvent.start, selectedEvent.end, usernames);
 
       } catch (error) {
         console.error("Error joining the ride:", error);
@@ -258,19 +258,19 @@ const EventCalendar = () => {
 
         console.log("Successfully left the ride");
 
-        if (updatedCapacity === 4){
-          try{
+        if (updatedCapacity === 4) {
+          try {
             const response = await fetch(`http://localhost:4000/api/rides/${selectedEvent.id}`, {
               method: "DELETE",
               headers: {
                 "Content-Type": "application/json",
               },
-              });
-              if (response.ok){
-                console.log("Ride deleted successfully");
-                await fetchData();
-              }
-          } catch (error){
+            });
+            if (response.ok) {
+              console.log("Ride deleted successfully");
+              await fetchData();
+            }
+          } catch (error) {
             console.error("Error updating ride capacity:", error);
           }
         }
@@ -292,12 +292,12 @@ const EventCalendar = () => {
     const decodedID = decoded._id
     try {
       const response = await fetch(`http://localhost:4000/api/members/${decodedID}`, {
-          headers: {
-              'Authorization': 'Bearer ' + token
-          }
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
       });
       if (!response.ok) {
-          throw new Error('Failed to fetch email for user');
+        throw new Error('Failed to fetch email for user');
       }
       const userData = await response.json();
       console.log(userData)
@@ -401,7 +401,7 @@ const EventCalendar = () => {
       const end = moment(start).add(30, 'minutes').toDate();
       const currentEmail = await fetchEmail(decoded._id);
       await sendEmail(currentEmail, title, start, end, username); // Use eventData directly
-  
+
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
