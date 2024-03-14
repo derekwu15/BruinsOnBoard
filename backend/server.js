@@ -22,8 +22,7 @@ const uri = process.env.MONGO_URI
 //middle ware
 app.use(express.json())
 app.use((req, res, next) => {
-  console.log(req.path, req.path)
-  next()
+    next()
 })
 
 //routes
