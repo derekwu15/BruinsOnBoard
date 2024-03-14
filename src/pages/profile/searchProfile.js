@@ -119,6 +119,7 @@ const MemberSearch = () => {
             <UserInfo>
               <h3>{member.name}</h3>
               <p>{member.username}</p>
+              <p>{member.bio}</p>
             </UserInfo>
           </ProfileCard>
         ))}
