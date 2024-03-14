@@ -14,11 +14,7 @@ python3 start.py
 npm install
 npm start
 ```
-When running start.py, it will ask you for the Mongo_URI and JWT_KEY which are necessary for connecting to the database on MongoDB and setting up the jwt token authentication system. 
-
-Then in the project directory, you can run:
-
-### `npm start`
+When running start.py, it will ask you for the Mongo_URI and JWT_KEY which are necessary for connecting to the database on MongoDB and setting up the jwt token authentication system. For the CS 35L project, we will provide these to our designated TA. 
 
 This runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
