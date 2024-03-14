@@ -10,8 +10,9 @@ To run the application locally, first clone the repository, `cd` into it (if nec
 ```
 git clone https://github.com/derekwu15/BruinsOnBoard.git
 cd ./BruinsOnBoard
-chmod +x start.sh
-./start.sh
+python3 start.py
+npm install
+npm start
 ```
 
 Then in the project directory, you can run:
