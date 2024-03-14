@@ -1,3 +1,4 @@
+require('dotenv').config()
 const Profile = require('../models/profileModel')
 const Member = require('../models/memberModel')
 const mongoose = require('mongoose')
