@@ -132,19 +132,19 @@ const EventCalendar = () => {
     const user = userString ? JSON.parse(userString) : null;
     const token = user.token;
     try {
-        const response = await fetch(`http://localhost:4000/api/profiles/${userId}`, {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Failed to fetch email for user');
+      const response = await fetch(`http://localhost:4000/api/profiles/${userId}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token
         }
-        const userData = await response.json();
-        return userData.email;
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch email for user');
+      }
+      const userData = await response.json();
+      return userData.email;
     } catch (error) {
-        console.error('Error fetching email:', error);
-        return null;
+      console.error('Error fetching email:', error);
+      return null;
     }
   };
 
@@ -196,16 +196,16 @@ const EventCalendar = () => {
           const [username, userId] = memberString.split(':');
           // Fetch the email for the user ID
           const email = await fetchEmail(userId);
-      
+
           // Call sendEmail if email is retrieved successfully
           if (email) {
-              sendEmail(email, selectedEvent.title, selectedEvent.start, selectedEvent.end, usernames);
+            sendEmail(email, selectedEvent.title, selectedEvent.start, selectedEvent.end, usernames);
           } else {
-              console.error(`Failed to fetch email for user ${username}`);
+            console.error(`Failed to fetch email for user ${username}`);
           }
         });
         const currentEmail = await fetchEmail(member.user_id);
-        sendEmail(currentEmail, selectedEvent.title, selectedEvent.start, selectedEvent.end, usernames);      
+        sendEmail(currentEmail, selectedEvent.title, selectedEvent.start, selectedEvent.end, usernames);
 
       } catch (error) {
         console.error("Error joining the ride:", error);
@@ -258,6 +258,23 @@ const EventCalendar = () => {
 
         console.log("Successfully left the ride");
 
+        if (updatedCapacity === 4) {
+          try {
+            const response = await fetch(`http://localhost:4000/api/rides/${selectedEvent.id}`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            if (response.ok) {
+              console.log("Ride deleted successfully");
+              await fetchData();
+            }
+          } catch (error) {
+            console.error("Error updating ride capacity:", error);
+          }
+        }
+
       } catch (error) {
         console.error("Error leaving the ride:", error);
       }
@@ -266,6 +283,30 @@ const EventCalendar = () => {
     }
 
   };
+
+  const getUsername = async () => {
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    const token = user.token;
+    const decoded = jwtDecode(token);
+    const decodedID = decoded._id
+    try {
+      const response = await fetch(`http://localhost:4000/api/members/${decodedID}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch email for user');
+      }
+      const userData = await response.json();
+      console.log(userData)
+      return userData.username;
+    } catch (error) {
+      console.error('Error fetching email:', error);
+      return null;
+    }
+  }
 
   // stylized popup for ride information
   const EventsPopup = ({ event, onClose }) => (
@@ -323,7 +364,6 @@ const EventCalendar = () => {
   const minTime = isToday ? new Date() : new Date().setHours(0, 0, 0, 0);
 
   // create -> sends data to backend -> calendar takes data from back and displays event
-  const [newRideId, setNewRideId] = useState(null);
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -333,8 +373,13 @@ const EventCalendar = () => {
     const date = moment(selectedDate).format('MMMM D, YYYY');
     const time = moment(selectedDate.getTime()).format('h:mm A');
 
-    const members = [];
-    const capacity = 4;
+    const username = await getUsername();
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    const token = user.token;
+    const decoded = jwtDecode(token);
+    const members = [username + ':' + decoded._id];
+    const capacity = 3;
 
     try {
       const response = await fetch("http://localhost:4000/api/rides/", {
@@ -345,38 +390,28 @@ const EventCalendar = () => {
         body: JSON.stringify({ to, from, date, time, capacity, members })
       });
 
+      const eventData = await response.json(); // Await here to ensure the promise resolves
+      setSelectedEvent(eventData); // Assuming setSelectedEvent updates state or context
+      console.log("Ride created successfully", eventData);
+      await fetchData(); // Refresh data after setting the event
+
+      console.log('test2' + eventData); // This might still log the old value due to state update batching
+      const title = eventData.from.toUpperCase() + " TO " + eventData.to.toUpperCase();
+      const start = moment(eventData.date + ' ' + eventData.time, 'MMMM DD, YYYY h:mm A').toDate();
+      const end = moment(start).add(30, 'minutes').toDate();
+      const currentEmail = await fetchEmail(decoded._id);
+      await sendEmail(currentEmail, title, start, end, username); // Use eventData directly
+
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
 
-         // Parse the JSON response body
-      const createdRideData = await response.json();
-      // setNewRideId(createdRideData._id); // Save the ID of the newly created ride
-      // // Assuming 'fetchData' asynchronously fetches and formats all rides, including the newly created one
-      await fetchData();
 
-      // Find the newly created ride in the list of all formatted rides by its ID
-      // console.log("Here is the createdRideData._id", createdRideData._id)
-      // console.log("Here is the formatted ID for all rides", events )
-      // const selectedRide = events.find(event => event.id === createdRideData._id);
-      // console.log(selectedRide)
-
-      // if (selectedRide) {
-      //   setSelectedEvent(selectedRide); // Set the found ride as the selected event
-      //   console.log("Ride created and selected successfully", selectedRide);
-      //   handleJoin(selectedRide); // Assuming you want to handle join for the selected ride
-      // } else {
-      //   console.log("Newly created ride not found in the fetched data");
-      // }
     } catch (error) {
       console.error("Failed to create or select the ride", error);
     }
 
-    console.log("Ride created successfully");
-      // handleJoin(e);
-    // } catch (error) {
-    //   console.error("Invalid", error);
-    // }
   }
 
   const [events, setEvents] = useState([]);

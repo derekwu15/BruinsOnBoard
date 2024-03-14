@@ -22,8 +22,7 @@ const uri = "mongodb+srv://readWrite:readWrite1@bruinsonboard.dzmdx9f.mongodb.ne
 //middle ware
 app.use(express.json())
 app.use((req, res, next) => {
-  console.log(req.path, req.path)
-  next()
+    next()
 })
 
 //routes
