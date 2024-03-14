@@ -7,9 +7,9 @@ BruinsOnBoard is a rideshare application for university students to easily find 
 ## Running the Application Locally
 To run the application locally, first clone the repository and install necessary dependences:
 
-git clone https://github.com/derekwu15/BruinsOnBoard.git
-cd ./BruinsOnBoard
-npm install
+### git clone https://github.com/derekwu15/BruinsOnBoard.git
+### cd ./BruinsOnBoard
+### npm install
 
 Then in the project directory, you can run:
 
